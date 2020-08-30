@@ -36,7 +36,7 @@ const SignIn = function ({ history }) {
 
     return (
         <Grid>
-            <Grid className='header'>
+            <Grid>
                 <Header />
             </Grid>
             <Grid className='content' justify="center" alignItems="center">
