@@ -4,8 +4,20 @@ import { Grid, Typography } from '@material-ui/core';
 import { Header, Footer } from '../components';
 
 
-function Profile() {
+const Profile = function ({ history }) {
 
+
+    //click back to home page
+    const handleClick = useCallback(async event => {
+        event.preventDefault();
+    
+        try {
+          history.push('/home'); // switch /home to the constant
+        } catch (error) {
+          alert(error);
+        }
+    
+      }, [history]);
 
     return (
         <Grid>
@@ -30,4 +42,4 @@ function Profile() {
 
 
 
-export { Profile };
+export const ProfileWithRouter = withRouter(Profile);

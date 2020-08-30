@@ -11,7 +11,7 @@ const Home = function ({ history }) {
         event.preventDefault();
     
         try {
-          history.push('/profile');
+          history.push('/profile'); // switch /profile to the constant
         } catch (error) {
           alert(error);
         }
