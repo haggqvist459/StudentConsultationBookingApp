@@ -1,52 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { ReactReduxFirebaseProvider, getFirebase } from 'react-redux-firebase'
 import * as serviceWorker from './serviceWorker';
-import { applyMiddleware, compose, createStore } from 'redux';
-import { reduxFirestore, getFirestore, createFirestoreInstance } from 'redux-firestore';
-import thunkMiddleware from 'redux-thunk';
-import rootReducer from './js/reducers/rootReducer';
-import { firebase, AuthProvider } from './js/utils';
+import { AuthProvider } from './js/utils';
 
 import './sass/index.scss';
 import App from './App';
 
-const store = createStore(
-  rootReducer,
-  compose(
-    applyMiddleware(thunkMiddleware.withExtraArgument({ getFirestore, getFirebase })),
-    reduxFirestore(firebase.firestore()),
-  )
-);
-
-const profileSpecificProps = {
-  userProfile: 'users',
-  useFirestoreForProfile: true,
-  enableRedirectHandling: false,
-  resetBeforeLogin: false
-}
-
-const rrfProps = {
-  firebase,
-  dispatch: store.dispatch,
-  userProfile: 'users',
-  presence: 'presence',
-  sessions: 'sessions',
-  config: profileSpecificProps,
-  createFirestoreInstance
-};
-
 
 ReactDOM.render(
 
-    <Provider store={store}>
-      <ReactReduxFirebaseProvider {...rrfProps}>
         <AuthProvider>
             <App />
-        </AuthProvider>
-      </ReactReduxFirebaseProvider>
-    </Provider>,
+        </AuthProvider>,
   document.getElementById('root'),
 );
 
