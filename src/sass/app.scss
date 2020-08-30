@@ -1,0 +1,32 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    height: -webkit-fill-available;
+    min-width: 100vw;
+    background-color: white;
+}
+
+
+.header { 
+    height: 15vh;
+    width: 100%;
+    background-color: burlywood;
+    top: 0;
+    left: 0;
+}
+
+.content {
+    min-height: 70vh;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+}
+
+.footer {
+    height: 15vh;
+    width: 100%; 
+    background-color: burlywood;
+    bottom: 0;
+    left: 0;
+}
