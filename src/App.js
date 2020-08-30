@@ -16,13 +16,13 @@ function App() {
             return (
               // If there's a currentUser, redirect to HomeWithRouter
               // else if there's no currentUser, redirect to SignIn
-              <Redirect to={hamburgerConstants.HOME} /> 
+              <Redirect to={routingConstants.HOME} /> 
             )
           }}
         />
 
         {/* this home should be a privateRoute so it can't be accessed without a currentUser */}
-        <Route exact path={hamburgerConstants.HOME} component={HomeWithRouter} />
+        <Route exact path={routingConstants.HOME} component={HomeWithRouter} />
         <PrivateRoute path={routingConstants.PROFILE} component={ProfileWithRouter} />
 
       </BrowserRouter>

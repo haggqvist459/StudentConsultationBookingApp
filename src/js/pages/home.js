@@ -1,10 +1,13 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
 import { Grid, Typography } from '@material-ui/core';
 import { Header, Calendar } from '../components';
-
+import { StudentSubjects } from '../utils'
 
 const Home = function ({ history }) {
+
+    const [calendarContent, setCalendarContent] = useState([]);
+    const [load, setLoad] = useState();
 
     //click to profile page
     const handleClick = useCallback(async event => {
@@ -18,6 +21,22 @@ const Home = function ({ history }) {
 
     }, [history]);
 
+    useEffect(() => {
+
+        setLoad(true);
+        // check if student or not here
+        async function fetchCalendarContent() {
+            const subjects = await StudentSubjects();
+            setCalendarContent(subjects);
+            console.log('finished fetching')
+        }
+
+        fetchCalendarContent().then(function () {
+            console.log('finished wait') 
+            setLoad(false);
+        })
+    
+    }, [])
 
     return (
         <Grid>
@@ -26,11 +45,16 @@ const Home = function ({ history }) {
             <Grid className='content'>
 
                 <Grid>
-                    <Typography> log in to access the calendar</Typography>
+                {load ?
+                <Typography>loading calendar... </Typography>
+                 :
+                 <Calendar props={calendarContent} />
+                 }
+                   
                 </Grid>
 
             </Grid>
-            
+
         </Grid>
     )
 }

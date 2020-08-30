@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
 import FullCalendar, { formatDate, NowIndicatorRoot } from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { Grid } from '@material-ui/core';
 
+function Calendar({ props }) {
 
-function Calendar() {
 
-    const { studentSubjects } = useSelector(state => state.calendar);
+    console.log(props);
 
     return (
         <Grid>
@@ -26,10 +25,11 @@ function Calendar() {
                 selectMirror={false}
                 dayMaxEvents={true}
                 weekends={false}
-                events={studentSubjects}// alternatively, use the `events` setting to fetch from a feed
+                events={props}// alternatively, use the `events` setting to fetch from a feed
                 select={handleDateSelect}
                 eventContent={renderEventContent} // custom render function
                 eventClick={handleEventClick}
+                dateClick={handleDateClick}
                 eventsSet={handleEvents} // called after events are initialized/added/changed/removed
             /* you can update a remote database when these fire:
             eventAdd={function(){}}
@@ -39,32 +39,37 @@ function Calendar() {
             />
         </Grid>
     )
-
 }
 
-const handleEventClick = (clickInfo) => {
+function handleDateClick(clickInfo) {
+    console.log('date clicked: ', clickInfo);
+}
+
+function handleEventClick(clickInfo) {
     // if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
     //     clickInfo.event.remove()
     // }
-    console.log('clicked event');
+    console.log('clicked event', clickInfo.event);
+    console.log('clicked event', clickInfo.event.title);
 }
 
 function renderEventContent(eventInfo) {
+
+    //event color logic here
+
+    
+
     return (
-        <>
+        <Grid style={{backgroundColor: 'red'}} item xs={12} sm={12} md={12} lg={12} xl={12}>
+
             <p>{eventInfo.event.title}</p>
-        </>
+
+        </Grid>
+
     )
 }
 
-
-export const handleWeekendsToggle = () => {
-    this.setState({
-        weekendsVisible: !this.state.weekendsVisible
-    })
-}
-
-export const handleDateSelect = (selectInfo) => {
+function handleDateSelect(selectInfo) {
     // let title = prompt('Please enter a new title for your event')
     let calendarApi = selectInfo.view.calendar
     console.log(selectInfo)
@@ -81,53 +86,10 @@ export const handleDateSelect = (selectInfo) => {
     // }
 }
 
-
-export const handleEvents = (events) => {
+function handleEvents(events) {
     // this.setState({
     //     currentEvents: events
     // })
 }
-
-// function renderSidebarEvent(event) {
-//     return (
-//         <li key={event.id}>
-//             <b>{formatDate(event.start, { year: 'numeric', month: 'short', day: 'numeric' })}</b>
-//             <i>{event.title}</i>
-//         </li>
-//     )
-// }
-
-export function RenderSidebar() {
-    return (
-        <div className='demo-app-sidebar'>
-            <div className='demo-app-sidebar-section'>
-                <h2>Instructions</h2>
-                <ul>
-                    <li>Select dates and you will be prompted to create a new event</li>
-                    <li>Drag, drop, and resize events</li>
-                    <li>Click an event to delete it</li>
-                </ul>
-            </div>
-            {/* <div className='demo-app-sidebar-section'>
-                <label>
-                    <input
-                        type='checkbox'
-                        checked={this.state.weekendsVisible}
-                        onChange={this.handleWeekendsToggle}
-                    ></input>
-            toggle weekends
-          </label>
-            </div> */}
-            {/* <div className='demo-app-sidebar-section'>
-                <h2>All Events ({this.state.currentEvents.length})</h2>
-                <ul>
-                    {this.state.currentEvents.map(renderSidebarEvent)}
-                </ul>
-            </div> */}
-        </div>
-    )
-}
-
-
 
 export { Calendar }
