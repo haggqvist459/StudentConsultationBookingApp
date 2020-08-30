@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../sass/index.scss';
 import { Button, Typography, Toolbar, AppBar, makeStyles, Grid } from '@material-ui/core';
-import { AuthProvider } from '../utils';
+import { AuthProvider, firebase } from '../utils';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,6 +19,10 @@ function Header() {
 
     const classes = useStyles();
 
+    const handleSignOut = () =>{
+        firebase.auth().signOut()
+    }
+
     return (
         <Grid className={classes.root}>
             <AppBar position="static">
@@ -33,7 +37,7 @@ function Header() {
                             </Grid>
                         </Grid>
 
-                        <Button color="inherit">
+                        <Button color="inherit" onClick={handleSignOut}>
                             <Typography>Sign out</Typography>
                         </Button>
                     </Grid>
