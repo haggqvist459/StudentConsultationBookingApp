@@ -7,8 +7,7 @@ import { applyMiddleware, compose, createStore } from 'redux';
 import { reduxFirestore, getFirestore, createFirestoreInstance } from 'redux-firestore';
 import thunkMiddleware from 'redux-thunk';
 import rootReducer from './js/reducers/rootReducer';
-import { firebase, responsiveTheme, AuthProvider } from './js/utils';
-import { ThemeProvider } from '@material-ui/core';
+import { firebase, AuthProvider } from './js/utils';
 
 import './sass/index.scss';
 import App from './App';
@@ -44,9 +43,7 @@ ReactDOM.render(
     <Provider store={store}>
       <ReactReduxFirebaseProvider {...rrfProps}>
         <AuthProvider>
-          <ThemeProvider theme={responsiveTheme}>
             <App />
-          </ThemeProvider>
         </AuthProvider>
       </ReactReduxFirebaseProvider>
     </Provider>,
