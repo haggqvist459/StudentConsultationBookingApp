@@ -2,13 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import { AuthProvider } from './js/utils';
-
 import './sass/index.scss';
 import App from './App';
 
 
 ReactDOM.render(
-
         <AuthProvider>
             <App />
         </AuthProvider>,

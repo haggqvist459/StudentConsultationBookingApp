@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import '../../sass/index.scss';
 import { Button, Typography, Toolbar, AppBar, makeStyles, Grid } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { authActions } from '../actions';
-import { HistoryHamburger } from './hamburger';
+import { AuthProvider } from '../utils';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -18,47 +16,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Header() {
+
     const classes = useStyles();
-    const dispatch = useDispatch();
-    const { auth, user } = useSelector(state => state.auth);
-
-    function handleLogin() {
-        if (!auth) {
-            dispatch(authActions.googleLogin());
-        }
-        else {
-            dispatch(authActions.logout());
-        }
-    }
-
-    useEffect(() => {
-
-    }, [auth, user]);
 
     return (
         <Grid className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
                     <Grid container justify={"space-between"}>
-                        {auth ?
-                            <Grid>
-                                <Grid container justify={"space-around"} alignContent={'center'}>
-                                    <HistoryHamburger />
-                                    <Typography style={{ marginLeft: '3vmin' }}>
-                                        {user.displayName}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                            :
-                            <Grid>
-                                <Typography variant="h6" className={classes.title}>
-                                    AIT Student Booking
-                            </Typography>
-                            </Grid>
-                        }
 
-                        <Button onClick={handleLogin} color="inherit">
-                            {auth ? <Typography>Sign out</Typography> : <Typography>Sign in</Typography>}
+                        <Grid>
+                            <Grid container justify={"space-around"} alignContent={'center'}>
+                                <Typography style={{ marginLeft: '3vmin' }}>
+                                    {AuthProvider.currentUser}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+
+                        <Button color="inherit">
+                            <Typography>Sign out</Typography>
                         </Button>
                     </Grid>
 

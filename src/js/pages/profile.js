@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { useCallback } from 'react';
+import { withRouter } from 'react-router';
 import { Grid, Typography } from '@material-ui/core';
-//import { useDispatch, useSelector } from 'react-redux';
-import { Header, Footer } from '../components';
+import { Header } from '../components';
 
 
 const Profile = function ({ history }) {
-
 
     //click back to home page
     const handleClick = useCallback(async event => {
@@ -27,13 +26,9 @@ const Profile = function ({ history }) {
 
                 <Typography>profile page</Typography>
                     
- 
-
 
             </Grid>
 
-
-            <Grid className='footer'><Footer /></Grid>
         </Grid>
     )
 

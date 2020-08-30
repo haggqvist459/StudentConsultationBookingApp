@@ -1,7 +1,7 @@
-import React, {  } from 'react';
+import React, { useCallback } from 'react';
 import { withRouter } from 'react-router';
 import { Grid, Typography } from '@material-ui/core';
-import { Header, Footer, Calendar } from '../components';
+import { Header, Calendar } from '../components';
 
 
 const Home = function ({ history }) {
@@ -9,14 +9,14 @@ const Home = function ({ history }) {
     //click to profile page
     const handleClick = useCallback(async event => {
         event.preventDefault();
-    
+
         try {
-          history.push('/profile'); // switch /profile to the constant
+            history.push('/profile'); // switch /profile to the constant
         } catch (error) {
-          alert(error);
+            alert(error);
         }
-    
-      }, [history]);
+
+    }, [history]);
 
 
     return (
@@ -25,19 +25,12 @@ const Home = function ({ history }) {
 
             <Grid className='content'>
 
-                {auth ?
-                    <Grid>
-                        <Calendar />
-                    </Grid>
-                    :
-                    <Grid>
-                        <Typography> log in to access the calendar</Typography>
-                    </Grid>
-                }
+                <Grid>
+                    <Typography> log in to access the calendar</Typography>
+                </Grid>
 
             </Grid>
-
-            <Grid className='footer'> <Footer /> </Grid>
+            
         </Grid>
     )
 }
