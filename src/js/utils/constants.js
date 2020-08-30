@@ -9,10 +9,10 @@ export const authConstants = {
 };
 
 
-export const hamburgerConstants = { 
+export const routingConstants = { 
 
-    PROFILE: '/PROFILE',
-    HOME: '/HOME',
+    PROFILE: '/profile',
+    HOME: '/home',
 }
 
 export const calendarConstants = {
