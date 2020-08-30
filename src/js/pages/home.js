@@ -6,6 +6,18 @@ import { Header, Footer, Calendar } from '../components';
 
 const Home = function ({ history }) {
 
+    //click to profile page
+    const handleClick = useCallback(async event => {
+        event.preventDefault();
+    
+        try {
+          history.push('/profile');
+        } catch (error) {
+          alert(error);
+        }
+    
+      }, [history]);
+
 
     return (
         <Grid>
