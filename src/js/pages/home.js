@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { withRouter } from 'react-router';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography, Button } from '@material-ui/core';
 import { Header, Calendar } from '../components';
 
 
@@ -27,6 +27,7 @@ const Home = function ({ history }) {
 
                 <Grid>
                     <Typography> log in to access the calendar</Typography>
+                    <Button onClick={handleClick}>View Profile</Button>
                 </Grid>
 
             </Grid>

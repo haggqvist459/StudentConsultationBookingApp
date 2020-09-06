@@ -11,7 +11,7 @@ const provider = new firebase.auth.GoogleAuthProvider();
 
 const SignIn = function ({ history }) {
 
-    const handleLoginSydney = useCallback(
+    const handleLogin = useCallback(
         async event => {
             event.preventDefault();
             try {
@@ -47,7 +47,7 @@ const SignIn = function ({ history }) {
                         <br />
                         <Typography style={{textAlign: "center"}}> Sign in to access the calendar and request an appointment with a teacher.</Typography>
                         <br />
-                        <Button variant="outlined" onClick={handleLoginSydney}>Sign In</Button>
+                        <Button variant="outlined" onClick={handleLogin}>Sign In</Button>
                     </Grid>
                 </Grid>
             </Grid>
