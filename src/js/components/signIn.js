@@ -16,7 +16,8 @@ const SignIn = function ({ history }) {
             event.preventDefault();
             try {
                 provider.setCustomParameters({
-                    hd: "ait.edu.au"
+                    // removed this to be able to test user roles. 
+                    // hd: "ait.edu.au"
                 });
                 firebase.auth().signInWithPopup(provider)
                     .then(() => {
