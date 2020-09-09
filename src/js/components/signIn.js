@@ -1,6 +1,6 @@
 import React, { useCallback, useContext } from 'react';
 import { withRouter } from 'react-router';
-import { routingConstants, firebase, AuthContext } from '../utils';
+import { routingConstants, firebaseConstants, roleConstants, firebase, AuthContext, adminConstants } from '../utils';
 import { Redirect } from 'react-router';
 import { Grid, Typography, Button } from '@material-ui/core';
 import { Header } from '../components';
@@ -11,15 +11,16 @@ const provider = new firebase.auth.GoogleAuthProvider();
 
 const SignIn = function ({ history }) {
 
-    const handleLoginSydney = useCallback(
+
+    const handleLogin = useCallback(
         async event => {
             event.preventDefault();
             try {
                 provider.setCustomParameters({
-                    hd: "ait.edu.au"
+                    // hd: firebaseConstants.HD
                 });
                 firebase.auth().signInWithPopup(provider)
-                    .then(() => {
+                    .then((user) => {
                         history.push(routingConstants.HOME);
                     })
             } catch (error) {
@@ -39,7 +40,7 @@ const SignIn = function ({ history }) {
             <Grid>
                 <Header />
             </Grid>
-            <Grid className='content' justify="center" alignItems="center">
+            <Grid container className='content' justify="center" alignItems="center">
                 {/* A sign in button here */}
                 <Grid container item xs={12} sm={12} md={12} lg={12} justify={"space-around"} alignItems={"center"}>
                     <Grid container direction="column" justify={"center"} alignItems={"center"}>
@@ -47,7 +48,7 @@ const SignIn = function ({ history }) {
                         <br />
                         <Typography style={{textAlign: "center"}}> Sign in to access the calendar and request an appointment with a teacher.</Typography>
                         <br />
-                        <Button variant="outlined" onClick={handleLoginSydney}>Sign In</Button>
+                        <Button variant="outlined" onClick={handleLogin}>Sign In</Button>
                     </Grid>
                 </Grid>
             </Grid>

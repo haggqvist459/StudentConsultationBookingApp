@@ -15,6 +15,21 @@ export const routingConstants = {
     HOME: '/home',
 }
 
+export const firebaseConstants = {
+    HD: 'ait.edu.au',
+}
+
+export const roleConstants = {
+    ROLE: "role",
+    STUDENT: 'student',
+    TEACHER: 'teacher',
+    ADMIN: 'admin',
+}
+
+export const adminConstants = {
+    ADMIN1: 'contactburnthevillage@gmail.com',
+}
+
 // export const calendarConstants = {
 
 //     STUDENT_CALENDAR_FIRESTORE_FAILURE: 'CALENDAR_FIRESTORE_FAILURE',
