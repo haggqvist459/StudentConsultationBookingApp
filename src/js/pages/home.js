@@ -32,10 +32,10 @@ const Home = function ({ history }) {
         }
 
         fetchCalendarContent().then(function () {
-            console.log('finished wait') 
+            console.log('finished wait')
             setLoad(false);
         })
-    
+
     }, [])
 
     return (
@@ -45,12 +45,12 @@ const Home = function ({ history }) {
             <Grid className='content'>
 
                 <Grid>
-                {load ?
-                <Typography>loading calendar... </Typography>
-                 :
-                 <Calendar props={calendarContent} />
-                 }
-                   
+                    {load ?
+                        <Typography>loading calendar... </Typography>
+                        :
+                        <Calendar props={calendarContent} />
+                    }
+
                 </Grid>
 
             </Grid>
