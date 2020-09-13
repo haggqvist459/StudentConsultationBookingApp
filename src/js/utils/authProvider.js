@@ -38,9 +38,8 @@ export const AuthProvider = ({ children }) => {
             if (user) {
                 assignRole(user.email)
                 console.log("inside useEffect", currentUserRole)
-                setPending(false)
             }
-
+            setPending(false)
         });
     }, [currentUserRole]);
 
