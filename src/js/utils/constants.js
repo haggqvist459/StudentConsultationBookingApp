@@ -8,6 +8,15 @@
 //     LOGOUT_FAILURE: 'LOGOUT_FAILURE',
 // };
 
+export const errors = {
+    FIREBASE_ERROR: 'Connection to firebase failed.',
+}
+
+export const design = {
+    PRIMARY_COLOR: '#00AEB3',
+    ERROR_RED: '#FF0000',
+    BUTTON_RED: '#B14E62',
+}
 
 export const routingConstants = { 
 
@@ -17,6 +26,25 @@ export const routingConstants = {
 
 export const firebaseConstants = {
     HD: 'ait.edu.au',
+    CURRENT_TERM_COLLECTION: 'currentTerm',
+    USERS_DOC: 'users',
+    COURSES_DOC: 'courses',
+    ENROLLMENTS_DOC: 'enrollments',
+
+    USERS_UPLOAD_SUCCESS: 'Users were uploaded successfully!',
+    USERS_UPLOAD_FAILURE: 'Users failed to upload!',
+
+    COURSES_UPLOAD_SUCCESS: 'Courses were uploaded successfully!',
+    COURSES_UPLOAD_FAILURE: 'Courses failed to upload!',
+
+    ENROLLMENTS_UPLOAD_SUCCESS: 'Enrollments were uploaded successfully!',
+    ENROLLMENTS_UPLOAD_FAILURE: 'Enrollments failed to upload!',
+}
+
+export const fileTypes = {
+    USERS_FILE: 'USERS',
+    COURSES_FILE: 'COURSES',
+    ENROLLMENTS_FILE: 'ENROLLMENTS',
 }
 
 export const roleConstants = {

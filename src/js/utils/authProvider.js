@@ -1,6 +1,6 @@
 import React, { useEffect, useState, createContext } from 'react';
 import { firebase } from './fbConfig';
-import { Grid, CircularProgress } from '@material-ui/core'
+import { Grid, CircularProgress, Typography } from '@material-ui/core'
 import { roleConstants, adminConstants } from './constants';
 
 export const AuthContext = createContext();
@@ -33,14 +33,14 @@ export const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
+        console.log('auth use effect')
         firebase.auth().onAuthStateChanged((user) => {
             setCurrentUser(user)
             if (user) {
                 assignRole(user.email)
                 console.log("inside useEffect", currentUserRole)
-                setPending(false)
             }
-
+            setPending(false);
         });
     }, [currentUserRole]);
 
