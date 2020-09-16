@@ -107,11 +107,11 @@ const Header = function ({ history }) {
                             onClose={handleClose}
                         >
                             <MenuItem onClick={handleClose}>
-                            <Link href={routingConstants.Profile}>
+                            
                                 <Typography>
                                     Profile
                                 </Typography>
-                            </Link>
+                            
                             </MenuItem>
                             <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
                         </Menu>

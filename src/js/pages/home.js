@@ -54,7 +54,6 @@ const Home = function ({ history }) {
                 </Grid>
 
             </Grid>
-                    <Button onClick={handleClick}>Profile</Button>
         </Grid>
     )
 }
