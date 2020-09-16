@@ -86,9 +86,9 @@ function Calendar({ props }) {
 
 
     return (
-        <Grid container direction={"column"}>
+        <Grid container direction={"column"} justify="center" alignItems="center">
 
-            <Grid container direction={'column'} style={{height: '40vh', overflowY: 'hidden'}}>
+            <Grid container item direction={'column'} xs={10} >
                 <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     headerToolbar={{
@@ -96,7 +96,12 @@ function Calendar({ props }) {
                         center: 'prev,next today',
                         right: ''
                     }}
-                    initialView='dayGridWeek'
+                    initialView='timeGridWeek'
+                    height="auto"
+                    allDaySlot={false}
+                    slotMinTime="07:00:00"
+                    slotMaxTime="19:00:00"
+                    // expandRows={true}
                     editable={false}
                     selectable={true}
                     selectMirror={false}
