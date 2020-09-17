@@ -3,11 +3,11 @@ import { withRouter } from 'react-router';
 import { Grid, Typography, Button, styled } from '@material-ui/core';
 import { Header, AddTerm } from '../components';
 import "react-datepicker/dist/react-datepicker.css";
-import { adminServices, design } from '../utils';
+import { adminServices, DESIGN } from '../utils';
 
 
 const ToolButton = styled(Button)({
-    background: design.PRIMARY_COLOR,
+    background: DESIGN.PRIMARY_COLOR,
     border: 0,
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(0, 174, 179, .3)',
@@ -17,7 +17,7 @@ const ToolButton = styled(Button)({
     padding: '0 30px',
     margin: '10px',
     '&:hover': {
-        backgroundColor: design.PRIMARY_COLOR,
+        backgroundColor: DESIGN.PRIMARY_COLOR,
     }
 });
 
@@ -64,7 +64,8 @@ function AdminProfile() {
         switch (activeComponent) {
 
             case 'viewTerm':
-                return <ViewTerm />
+                //return <ViewTerm />
+                return <AddTerm />
 
             case 'addTerm':
                 return <AddTerm />
@@ -94,9 +95,9 @@ function AdminProfile() {
                         :
                         <Grid>
                             {currentTerm && currentTerm ?
-                                <ToolButton onClick={() => handleToolClick('viewTerm')}>view term</ToolButton>
+                                <ToolButton onClick={() => handleToolClick('viewTerm')}>upload</ToolButton>
                                 :
-                                <ToolButton onClick={() => handleToolClick('addTerm')}>add term</ToolButton>
+                                <ToolButton onClick={() => handleToolClick('addTerm')}>upload</ToolButton>
                             }
                         </Grid>
                     }
