@@ -1,7 +1,7 @@
 import React, { useEffect, useState, createContext } from 'react';
 import { firebase } from './fbConfig';
-import { Grid, CircularProgress } from '@material-ui/core'
-import { roleConstants, adminConstants } from './constants';
+import { Grid, CircularProgress, Typography } from '@material-ui/core'
+import { ROLE_CONSTANTS, ADMIN_CONSTANTS } from './constants';
 
 export const AuthContext = createContext();
 
@@ -16,23 +16,24 @@ export const AuthProvider = ({ children }) => {
         if (email.match(/^\d/)) {
             // is the user a student
             console.log("User is a student");
-            setCurrentUserRole(roleConstants.STUDENT);
+            setCurrentUserRole(ROLE_CONSTANTS.STUDENT);
 
         }
-        else if (email === adminConstants.ADMIN1) {
+        else if (email === ADMIN_CONSTANTS.ADMIN1) {
             // is the user an admin
             console.log("User is an admin");
-            console.log(adminConstants.ADMIN1);
-            setCurrentUserRole(roleConstants.ADMIN);
+            console.log(ADMIN_CONSTANTS.ADMIN1);
+            setCurrentUserRole(ROLE_CONSTANTS.ADMIN);
         }
         else {
             // the user is a teacher
             console.log("User is a teacher");
-            setCurrentUserRole(roleConstants.TEACHER);
+            setCurrentUserRole(ROLE_CONSTANTS.TEACHER);
         }
     }
 
     useEffect(() => {
+        console.log('auth use effect')
         firebase.auth().onAuthStateChanged((user) => {
             setCurrentUser(user)
             if (user) {

@@ -38,6 +38,10 @@ const Home = function ({ history }) {
 
     }, [])
 
+    function toAdmin() {
+        history.push('/admin');
+    }
+
     return (
         <Grid>
             <Grid className='header'> <Header /> </Grid>
@@ -50,6 +54,8 @@ const Home = function ({ history }) {
                         :
                         <Calendar props={calendarContent} />
                     }
+
+                    <Button onClick={toAdmin}>admin</Button>
 
                 </Grid>
 

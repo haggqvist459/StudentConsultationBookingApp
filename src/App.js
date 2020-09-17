@@ -1,9 +1,8 @@
 import React from 'react';
-import { BrowserRouter, Route, Redirect } from 'react-router-dom';
-import { HomeWithRouter, ProfileWithRouter } from './js/pages';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { HomeWithRouter, ProfileWithRouter, AdminProfileWithRouter } from './js/pages';
 import { SignInWithRouter } from './js/components/signIn';
-import { PrivateRoute, routingConstants } from './js/utils';
-import { AuthContext } from './js/utils/authProvider';
+import { PrivateRoute, ROUTING_CONSTANTS } from './js/utils';
 import { Grid } from '@material-ui/core';
 
 function App() {
@@ -14,8 +13,9 @@ function App() {
     <Grid>
       <BrowserRouter>
         <Route exact path="/" component={SignInWithRouter}/>
-        <PrivateRoute path={routingConstants.HOME} component={HomeWithRouter} />
-        <PrivateRoute path={routingConstants.PROFILE} component={ProfileWithRouter} />
+        <PrivateRoute path={ROUTING_CONSTANTS.HOME} component={HomeWithRouter} />
+        <PrivateRoute path={ROUTING_CONSTANTS.PROFILE} component={ProfileWithRouter} />
+        <PrivateRoute path={'/admin'} component={AdminProfileWithRouter} />
 
       </BrowserRouter>
 

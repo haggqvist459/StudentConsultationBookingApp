@@ -1,6 +1,6 @@
 import React, { useCallback, useContext } from 'react';
 import { withRouter } from 'react-router';
-import { routingConstants, firebaseConstants, roleConstants, firebase, AuthContext, adminConstants } from '../utils';
+import { ROUTING_CONSTANTS, firebase, AuthContext } from '../utils';
 import { Redirect } from 'react-router';
 import { Grid, Typography, Button } from '@material-ui/core';
 import { Header } from '../components';
@@ -21,7 +21,7 @@ const SignIn = function ({ history }) {
                 });
                 firebase.auth().signInWithPopup(provider)
                     .then((user) => {
-                        history.push(routingConstants.HOME);
+                        history.push(ROUTING_CONSTANTS.HOME);
                     })
             } catch (error) {
                 console.log(error);
@@ -32,7 +32,7 @@ const SignIn = function ({ history }) {
 
     const { currentUser } = useContext(AuthContext);
     if (currentUser) {
-        return <Redirect to={routingConstants.HOME} />; // whatever the home page path is
+        return <Redirect to={ROUTING_CONSTANTS.HOME} />; // whatever the home page path is
     }
 
     return (
