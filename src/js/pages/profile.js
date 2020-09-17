@@ -35,7 +35,6 @@ const Profile = function ({ history }) {
 
       <Grid container className='content' justify="center" alignItems="center">
         <Grid container item xs={12} sm={12} md={12} lg={12} justify={"space-around"} alignItems={"center"}>
-          <Typography>profile page</Typography>
           {{
             student: (
               <StudentProfile />
