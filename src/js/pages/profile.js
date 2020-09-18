@@ -1,8 +1,8 @@
 import React, { useCallback, useContext } from 'react';
 import { withRouter } from 'react-router';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { Header } from '../components';
-import { adminConstants, roleConstants, AuthContext } from '../utils';
+import { AuthContext } from '../utils';
 import AdminProfile from '../components/profileAdmin';
 import TeacherProfile from '../components/profileTeacher';
 import StudentProfile from '../components/profileStudent';

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { Grid, Typography, Button } from '@material-ui/core';
-import { adminConstants, roleConstants, AuthContext } from '../utils';
+import { Grid, Typography } from '@material-ui/core';
+import { AuthContext } from '../utils';
 
 const Profile = function ({ history }) {
 

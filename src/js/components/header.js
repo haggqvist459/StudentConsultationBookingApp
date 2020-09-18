@@ -1,12 +1,12 @@
 import React, { useState, useContext, useCallback } from 'react';
 import { Redirect } from 'react-router';
 import '../../sass/index.scss';
-import { Button, Typography, makeStyles, Grid, Link } from '@material-ui/core';
+import { Typography, makeStyles, Grid } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { AuthContext, firebase, routingConstants } from '../utils';
+import { AuthContext, firebase, ROUTING_CONSTANTS } from '../utils';
 import LogoImage from '../../assets/aitlogowhite.png'
 
 const useStyles = makeStyles((theme) => ({
@@ -58,7 +58,7 @@ const Header = function ({ history }) {
         setAnchorEl(null);
 
         try {
-            history.push(routingConstants.PROFILE); // switch /profile to the constant
+            history.push(ROUTING_CONSTANTS.PROFILE); // switch /profile to the constant
         } catch (error) {
             alert(error);
         }
