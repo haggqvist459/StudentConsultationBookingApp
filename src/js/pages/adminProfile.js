@@ -159,8 +159,8 @@ function AdminProfile() {
                         <ToolButton onClick={() => handleToolClick('topics')}>topics</ToolButton>
                     }
                 </Grid>
-                
-                    <ActiveComponent />
+
+                <ActiveComponent />
 
             </Grid>
         </Grid>
