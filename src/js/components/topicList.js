@@ -383,11 +383,20 @@ function Topics({ topics, updateList }) {
                                 }}
                                 style={{ marginBottom: '30px' }}
                             />
-                            <BlueButton
+
+                            {topicUiState.topic && topicUiState.topic ? 
+                                <BlueButton
                                 type={TOOL_BUTTON.SAVE}
                                 onClick={() => onClick({ type: TOOL_BUTTON.SAVE, topic: topicUiState.topic })}>
                                 Save
                             </BlueButton>
+                            :
+                            <BlueButton
+                                disabled>
+                                Save
+                            </BlueButton>
+                            }
+                            
                             <BlueButton
                                 type={TOOL_BUTTON.RETURN}
                                 onClick={() => onClick({ type: TOOL_BUTTON.RETURN, topic: topicUiState.topic })}
