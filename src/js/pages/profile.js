@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from 'react';
 import { withRouter } from 'react-router';
 import { Grid } from '@material-ui/core';
-import { Header } from '../components';
+import { RouterHeader } from '../components';
 import { AuthContext } from '../utils';
 import AdminProfile from '../components/profileAdmin';
 import TeacherProfile from '../components/profileTeacher';
@@ -14,23 +14,20 @@ const Profile = function ({ history }) {
   const role = currentUserRole;
   console.log("role", role);
   //click back to home page
-  const handleClick = useCallback(async event => {
-    event.preventDefault();
-
+  function handleClick() {
     try {
       history.push('/home'); // switch /home to the constant
     } catch (error) {
       alert(error);
     }
-
-  }, [history]);
+  };
 
   //fetch all the data from the database here and then pass it to the components as props.
 
   return (
     <Grid>
-      <Grid className='header'>
-        <Header />
+      <Grid className='RouterHeader'>
+        <RouterHeader onClick={handleClick} link={'Home'}/>
       </Grid>
 
       <Grid container className='content' justify="center" alignItems="center">

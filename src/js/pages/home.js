@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
 import { Grid, Typography, Button } from '@material-ui/core';
-import { Header, Calendar } from '../components';
+import { RouterHeader, Calendar } from '../components';
 import { StudentSubjects } from '../utils'
 
 const Home = function ({ history }) {
@@ -10,16 +10,13 @@ const Home = function ({ history }) {
     const [load, setLoad] = useState();
 
     //click to profile page
-    const handleClick = useCallback(async event => {
-        event.preventDefault();
-
+    function handleClick() {
         try {
             history.push('/profile'); // switch /profile to the constant
         } catch (error) {
             alert(error);
         }
-
-    }, [history]);
+    };
 
     useEffect(() => {
 
@@ -38,13 +35,9 @@ const Home = function ({ history }) {
 
     }, [])
 
-    function toAdmin() {
-        history.push('/admin');
-    }
-
     return (
         <Grid>
-            <Grid className='header'> <Header /> </Grid>
+            <Grid className='RouterHeader'> <RouterHeader onClick={handleClick} link={'Profile'}/> </Grid>
 
             <Grid className='content'>
 
@@ -54,8 +47,6 @@ const Home = function ({ history }) {
                         :
                         <Calendar props={calendarContent} />
                     }
-
-                    <Button onClick={toAdmin}>admin</Button>
 
                 </Grid>
 

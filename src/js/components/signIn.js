@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import { ROUTING_CONSTANTS, firebase, AuthContext } from '../utils';
 import { Redirect } from 'react-router';
 import { Grid, Typography, Button } from '@material-ui/core';
-import { Header } from '../components';
+import { RouterHeader } from '../components';
 import '../../sass/components/signIn.scss';
 
 
@@ -38,7 +38,7 @@ const SignIn = function ({ history }) {
     return (
         <Grid>
             <Grid>
-                <Header />
+                <RouterHeader />
             </Grid>
             <Grid container className='content' justify="center" alignItems="center">
                 {/* A sign in button here */}

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useCallback } from 'react';
-import { Redirect } from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 import '../../sass/index.scss';
 import { Typography, makeStyles, Grid } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { AuthContext, firebase, ROUTING_CONSTANTS } from '../utils';
 import LogoImage from '../../assets/aitlogowhite.png'
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Header = function ({ history }) {
+const Header = function ({ history, onClick, link }) {
 
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
@@ -69,7 +70,7 @@ const Header = function ({ history }) {
         event.preventDefault();
 
         try {
-            history.push('/profile'); // switch /profile to the constant
+            onClick();
         } catch (error) {
             alert(error);
         }
@@ -106,10 +107,10 @@ const Header = function ({ history }) {
                             open={open}
                             onClose={handleClose}
                         >
-                            <MenuItem onClick={handleClose}>
+                            <MenuItem onClick={handleClick}>
                             
                                 <Typography>
-                                    Profile
+                                    {link}
                                 </Typography>
                             
                             </MenuItem>
@@ -127,4 +128,11 @@ const Header = function ({ history }) {
 }
 
 
-export { Header };
+let RouterHeader = withRouter(Header);
+
+RouterHeader.propTypes = {
+    onClick: PropTypes.func.isRequired,
+    link: PropTypes.string.isRequired,
+}
+
+export { RouterHeader };

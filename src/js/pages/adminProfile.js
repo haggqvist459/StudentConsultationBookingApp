@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router';
 import { Grid, Typography, Button, styled } from '@material-ui/core';
-import { Header, AddTerm, Topics } from '../components';
+import { RouterHeader, AddTerm, Topics } from '../components';
 import "react-datepicker/dist/react-datepicker.css";
 import { adminServices, DESIGN } from '../utils';
 
@@ -20,7 +20,6 @@ const ToolButton = styled(Button)({
         backgroundColor: DESIGN.PRIMARY_COLOR,
     }
 });
-
 
 function AdminProfile() {
 
@@ -132,7 +131,7 @@ function AdminProfile() {
     return (
         <Grid>
 
-            <Grid className='header'> <Header /> </Grid>
+            <Grid className='RouterHeader'> <RouterHeader /> </Grid>
 
             <Grid container direction={'row'} justify={'center'} style={{ marginTop: '20px' }}>
                 <Typography>AIT student consultation admin</Typography>
