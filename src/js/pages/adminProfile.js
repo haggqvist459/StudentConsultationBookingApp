@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router';
 import { Grid, Typography, Button, styled } from '@material-ui/core';
-import { Header, AddTerm } from '../components';
+import { Header, AddTerm, Topics } from '../components';
 import "react-datepicker/dist/react-datepicker.css";
 import { adminServices, DESIGN } from '../utils';
 
@@ -24,55 +24,106 @@ const ToolButton = styled(Button)({
 
 function AdminProfile() {
 
-    const [currentTerm, setCurrentTerm] = useState(false);
-    const [loadingTerm, setLoadingTerm] = useState();
-    const [activeComponent, setActiveComponent] = useState();
-
-    async function termCheck() {
-        setLoadingTerm(true)
-        setCurrentTerm(await adminServices.checkCurrentTerm());
-        setLoadingTerm(false)
-    }
+    const [state, setState] = useState({
+        uiState: {
+            mounted: false,
+            activeComponent: null,
+            termsLoading: true,
+            topicsLoading: true,
+            topicsUpdate: false,
+        },
+        serviceResponse: {
+            termData: null,
+            topics: null,
+        },
+    })
 
     useEffect(() => {
+        async function updateList() {
+            console.log('admin profile updating topic list')
+            setState({
+                ...state,
+                serviceResponse: {
+                    ...state.serviceResponse,
+                    topics: await adminServices.getTopics(),
+                },
+                uiState: {
+                    ...state.uiState,
+                    activeComponent: 'topics',
+                    topicsLoading: false,
+                    topicsUpdate: false,
+                },
+            })
+        }
 
-        // check if there is a current term 
-        termCheck();
+        async function initAdmin() {
+            console.log('admin profile mounting')
+            setState({
+                ...state,
+                uiState: {
+                    ...state.uiState,
+                    mounted: true,
+                    termsLoading: false,
+                    topicsLoading: false,
+                },
+                serviceResponse: {
+                    termData: await adminServices.checkCurrentTerm(),
+                    topics: await adminServices.getTopics(),
+                }
+            })
+        }
 
-    }, [currentTerm])
-
-    function ViewTerm() {
-        return (
-
-            <Grid>
-
-            </Grid>
-        )
-    }
-
-    function TopicList() {
-        return (
-            <Typography>topic list</Typography>
-        )
-    }
+        if (!state.uiState.mounted) {
+            initAdmin();
+        }
+        if (state.uiState.topicsUpdate) {
+            updateList();
+        }
+    }, [state])
 
     function handleToolClick(tool) {
-        setActiveComponent(tool);
+        setState({
+            ...state,
+            uiState: {
+                ...state.uiState,
+                activeComponent: tool,
+            }
+        })
+    }
+
+    function updateList() {
+        setState({
+            ...state,
+            uiState: {
+                ...state.uiState,
+                topicsUpdate: true,
+                topicsLoading: true,
+            }
+        })
     }
 
     function ActiveComponent() {
-        switch (activeComponent) {
-
+        switch (state.uiState.activeComponent) {
+            // view term not implemented !
             case 'viewTerm':
-                //return <ViewTerm />
-                return <AddTerm />
+                return (
+                    <Grid container direction={'row'} justify={'center'} item xs={12} sm={12} md={6} lg={6} xl={6} style={{ marginTop: '40px' }}>
+                        <AddTerm />
+                    </Grid>
+                )
 
             case 'addTerm':
-                return <AddTerm />
-
+                return (
+                    <Grid container direction={'row'} justify={'center'} item xs={12} sm={12} md={6} lg={6} xl={6} style={{ marginTop: '40px' }}>
+                        <AddTerm />
+                    </Grid>
+                )
             case 'topics':
-                return <TopicList />
-
+                return (
+                    <Grid container direction={'row'} justify={'center'} item xs={12} sm={12} md={6} lg={6} xl={6} style={{ marginTop: '40px' }}>
+                        <Topics topics={state.serviceResponse.topics} updateList={updateList} />
+                    </Grid>
+                )
             default:
                 return null;
         }
@@ -90,28 +141,28 @@ function AdminProfile() {
             <Grid container direction={'row'} style={{ marginTop: '20px' }}>
 
                 <Grid container direction={'column'} alignItems={'flex-start'} item xs={12} sm={12} md={3} lg={3} xl={3} style={{ marginTop: '40px' }}>
-                    {loadingTerm ?
+                    {state.uiState.termsLoading ?
                         <ToolButton>loading</ToolButton>
                         :
                         <Grid>
-                            {currentTerm && currentTerm ?
+                            {state.serviceResponse.termData && state.serviceResponse.termData ?
                                 <ToolButton onClick={() => handleToolClick('viewTerm')}>upload</ToolButton>
                                 :
                                 <ToolButton onClick={() => handleToolClick('addTerm')}>upload</ToolButton>
                             }
                         </Grid>
                     }
-                    <ToolButton onClick={() => handleToolClick('topics')}>topics</ToolButton>
-                </Grid>
 
-                <Grid container direction={'row'} justify={'center'} item xs={12} sm={12} md={6} lg={6} xl={6} style={{ marginTop: '40px' }}>
+                    {state.uiState.topicsLoading ?
+                        <ToolButton>loading</ToolButton>
+                        :
+                        <ToolButton onClick={() => handleToolClick('topics')}>topics</ToolButton>
+                    }
+                </Grid>
+                
                     <ActiveComponent />
-                </Grid>
-
-
 
             </Grid>
-
         </Grid>
     )
 }

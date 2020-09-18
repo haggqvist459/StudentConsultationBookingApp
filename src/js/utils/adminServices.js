@@ -4,6 +4,10 @@ import { FIREBASE_CONSTANTS, ERRORS, FILETYPES } from './constants';
 export const adminServices = {
     checkCurrentTerm,
     uploadTermFile,
+    getTopics,
+    newTopic,
+    updateTopic,
+    deleteTopic,
 }
 
 async function checkCurrentTerm() {
@@ -15,9 +19,11 @@ async function checkCurrentTerm() {
         return new Promise((resolve, reject) => {
             currentTermRef.get().then(function (result) {
                 if (result.empty) {
+                    console.log('rejecting termdata')
                     reject(false)
                 }
                 else {
+                    console.log('resolving termdata')
                     resolve(true)
                 }
             });
@@ -42,19 +48,19 @@ async function uploadTermFile({ termData, fileType }) {
                 return uploadUsers();
             } catch (error) {
                 return error;
-            }
+            };
         case FILETYPES.COURSES_FILE:
             try {
                 return uploadCourses();
             } catch (error) {
                 return error;
-            }
+            };
         case FILETYPES.ENROLLMENTS_FILE:
             try {
                 return uploadEnrollments();
             } catch (error) {
                 return error;
-            }
+            };
         default:
             break;
     }
@@ -127,4 +133,106 @@ async function uploadTermFile({ termData, fileType }) {
                 })
         })
     }
+}
+
+async function getTopics() {
+
+    const db = firebase.firestore();
+    const topicRef = db.collection(FIREBASE_CONSTANTS.TOPIC_COLLECTION);
+    let topics = [];
+    try {
+        return new Promise((resolve, reject) => {
+            topicRef.get().then(function (snapshot) {
+                if (snapshot.empty) {
+                    console.log('rejecting topics')
+                    reject('no topics found')
+                }
+                else {
+                    snapshot.forEach((item, index) => {
+                        let topic = {
+                            id: item.id,
+                            topic: item.data().topic,
+                        }
+                        topics.push(topic)
+                    })
+                    console.log('resolving topics')
+                    resolve(topics)
+                }
+            });
+        }).catch(function (error) {
+            console.log(error);
+            return (false)
+        })
+    }
+    catch (error) {
+        console.log(error);
+        return (ERRORS.FIREBASE_ERROR);
+    }
+}
+
+async function newTopic({ topic }) {
+    const db = firebase.firestore();
+    const topicRef = db.collection(FIREBASE_CONSTANTS.TOPIC_COLLECTION);
+    console.log('new topic, ', topic)
+    return new Promise((resolve, reject) => {
+        try {
+            topicRef.doc().set({ topic: topic })
+                .catch(function () {
+                    console.log('new topic reject')
+                    reject('failed to store')
+                })
+                .then(function () {
+                    console.log('new topic resolve')
+                    resolve('stored successfully')
+                })
+        }
+        catch (error) {
+            console.log(error);
+            reject('failed to store')
+        }
+    })
+}
+
+async function updateTopic({ topicRef, topic }) {
+    const db = firebase.firestore();
+    const dbRef = db.collection(FIREBASE_CONSTANTS.TOPIC_COLLECTION).doc(topicRef);
+    console.log('updating ', topicRef, ' with data ', topic.topic)
+    return new Promise((resolve, reject) => {
+        try {
+            dbRef.update({ topic: topic.topic })
+                .catch(function () {
+                    console.log('update topic reject');
+                    reject('failed to update');
+                })
+                .then(function () {
+                    console.log('update topic resolve');
+                    resolve('updated successfully');
+                })
+        }
+        catch (error) {
+            console.log(error);
+            reject('failed to update')
+        }
+    })
+}
+
+async function deleteTopic({ topicRef }) {
+    const db = firebase.firestore();
+    const dbRef = db.collection(FIREBASE_CONSTANTS.TOPIC_COLLECTION).doc(topicRef);
+
+    return new Promise((resolve, reject) => {
+        try {
+            dbRef.delete().catch(function (error) {
+                console.log(error);
+                reject('delete error');
+            }).then(function () {
+                console.log('deleted');
+                resolve('delete success');
+            });
+        }
+        catch (error) {
+            console.log(error);
+            reject('failed to delete')
+        }
+    })
 }

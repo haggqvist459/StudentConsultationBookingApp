@@ -12,6 +12,16 @@ export const ERRORS = {
     FIREBASE_ERROR: 'Connection to firebase failed.',
 }
 
+export const TOOL_BUTTON = {
+    NEW: 'NEW',
+    EDIT: 'EDIT',
+    UPDATE: 'UPDATE',
+    SAVE: 'SAVE',
+    DELETE: 'DELETE',
+    RETURN: 'RETURN',
+   
+}
+
 export const DESIGN = {
     PRIMARY_COLOR: '#00AEB3',
     ERROR_RED: '#FF0000',
@@ -61,10 +71,10 @@ export const UI_TEXT = {
     INCOMPLETE_UPLOAD_ERROR: 'File incomplete, please see upload guide for required fields.',
 }
 
-
 export const FIREBASE_CONSTANTS = {
     HD: 'ait.edu.au',
     CURRENT_TERM_COLLECTION: 'currentTerm',
+    TOPIC_COLLECTION: 'topics',
     USERS_DOC: 'users',
     COURSES_DOC: 'courses',
     ENROLLMENTS_DOC: 'enrollments',
@@ -77,6 +87,8 @@ export const FIREBASE_CONSTANTS = {
 
     ENROLLMENTS_UPLOAD_SUCCESS: 'Enrollments were uploaded successfully!',
     ENROLLMENTS_UPLOAD_FAILURE: 'Enrollments failed to upload!',
+
+
 }
 
 export const FILETYPES = {
