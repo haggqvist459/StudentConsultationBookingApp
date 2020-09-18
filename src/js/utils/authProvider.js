@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
                 assignRole(user.email)
                 console.log("inside useEffect", currentUserRole)
             }
-            setPending(false);
+            setPending(false)
         });
     }, [currentUserRole]);
 

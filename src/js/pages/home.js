@@ -60,7 +60,6 @@ const Home = function ({ history }) {
                 </Grid>
 
             </Grid>
-
         </Grid>
     )
 }
