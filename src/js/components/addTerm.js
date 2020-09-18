@@ -4,6 +4,7 @@ import { Grid, Typography, Button, styled, CircularProgress } from '@material-ui
 import { adminServices, DESIGN, FILETYPES } from '../utils';
 import "react-datepicker/dist/react-datepicker.css";
 import { FileDrop } from './dropZone';
+import moment from 'moment';
 
 const ToolButton = styled(Button)({
     background: DESIGN.PRIMARY_COLOR,
@@ -101,12 +102,6 @@ export function AddTerm() {
                 break;
             case FILETYPES.COURSES_FILE:
                 console.log('courses read complete: ', fileType)
-                let courses = JSON.parse(localStorage.getItem('COURSES'));
-                courses.forEach((item) => {
-                    item.startDate = newTermState.termDates.termStart;
-                    item.endDate = newTermState.termDates.termEnd;
-                })
-                console.log(courses);
                 setNewTermState({
                     ...newTermState,
                     coursesFileStatus: {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, createContext } from 'react';
 import { firebase } from './fbConfig';
-import { Grid, CircularProgress, Typography } from '@material-ui/core'
+import { Grid, CircularProgress } from '@material-ui/core'
 import { ROLE_CONSTANTS, ADMIN_CONSTANTS } from './constants';
 
 export const AuthContext = createContext();
@@ -17,7 +17,6 @@ export const AuthProvider = ({ children }) => {
             // is the user a student
             console.log("User is a student");
             setCurrentUserRole(ROLE_CONSTANTS.STUDENT);
-
         }
         else if (email === ADMIN_CONSTANTS.ADMIN1) {
             // is the user an admin
