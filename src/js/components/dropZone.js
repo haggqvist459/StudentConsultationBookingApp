@@ -5,6 +5,7 @@ import Papa from 'papaparse';
 import { Grid, Typography, Box } from '@material-ui/core';
 import { CheckCircleOutline, ErrorOutline, AddCircleOutline, HourglassEmpty } from '@material-ui/icons';
 import { ICON_CONSTANTS, UI_TEXT, FILETYPES, REQUIRED_FIELDS } from '../utils';
+import moment from 'moment';
 
 function StatusIcon({ status }) {
     switch (status) {
@@ -190,6 +191,8 @@ function FileDrop({ fileName, readComplete, readError }) {
                                 }
                             }
                         })
+                        let startDate = moment(localStorage.getItem('STARTS')).add('days', 21).format('YYYY-MM-DD');
+                        let endDate = moment(localStorage.getItem('ENDS')).format('YYYY-MM-DD');
                         let course = {
                             courseID: item[0],
                             integrationID: item[1],
@@ -198,10 +201,15 @@ function FileDrop({ fileName, readComplete, readError }) {
                             accountID: item[4],
                             termID: item[5],
                             status: item[6],
-                            startDate: '',
-                            endDate: '',
+                            termStart: localStorage.getItem('STARTS'),
+                            termEnd: localStorage.getItem('ENDS'),
                             format: item[9],
-                            blueprintID: item[10]
+                            blueprintID: item[10],
+                            daysOfWeek: 'teacher must assign',
+                            startRecur: startDate,
+                            endRecur: endDate,
+                            startTime: 'teacher must assign',
+                            endTime: 'teacher must assign',
                         }
                         verifiedList.push(course);
                     })

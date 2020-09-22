@@ -1,12 +1,12 @@
 import React, { useState, useContext, useCallback } from 'react';
-import { Redirect, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import '../../sass/index.scss';
 import { Typography, makeStyles, Grid } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { AuthContext, firebase, ROUTING_CONSTANTS } from '../utils';
+import { AuthContext, firebase } from '../utils';
 import LogoImage from '../../assets/aitlogowhite.png'
 import PropTypes from 'prop-types';
 
@@ -49,22 +49,22 @@ const Header = function ({ history, onClick, link }) {
         setAnchorEl(null);
     };
 
-    const handleProfile2 = () => {
-        setAnchorEl(null);
-        return <Redirect to={'/profile'} />;
-    }
+    // const handleProfile2 = () => {
+    //     setAnchorEl(null);
+    //     return <Redirect to={'/profile'} />;
+    // }
 
-    const handleProfile = useCallback(async event => {
-        event.preventDefault();
-        setAnchorEl(null);
+    // const handleProfile = useCallback(async event => {
+    //     event.preventDefault();
+    //     setAnchorEl(null);
 
-        try {
-            history.push(ROUTING_CONSTANTS.PROFILE); // switch /profile to the constant
-        } catch (error) {
-            alert(error);
-        }
+    //     try {
+    //         history.push(ROUTING_CONSTANTS.PROFILE); // switch /profile to the constant
+    //     } catch (error) {
+    //         alert(error);
+    //     }
 
-    }, [history]);
+    // }, [history]);
 
     const handleClick = useCallback(async event => {
         event.preventDefault();
@@ -131,8 +131,8 @@ const Header = function ({ history, onClick, link }) {
 let RouterHeader = withRouter(Header);
 
 RouterHeader.propTypes = {
-    onClick: PropTypes.func.isRequired,
-    link: PropTypes.string.isRequired,
+    onClick: PropTypes.func,
+    link: PropTypes.string,
 }
 
 export { RouterHeader };

@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
-import { AuthContext } from '../utils';
+//import { AuthContext } from '../utils';
 
 const Profile = function ({ history }) {
 
-    const { currentUser } = useContext(AuthContext);
+    //const { currentUser } = useContext(AuthContext);
     
-    const handleClick = () => {
-        console.log(currentUser)
-    }
+    // const handleClick = () => {
+    //     console.log(currentUser)
+    // }
 
     return (
         <Grid container className='content' justify="center" alignItems="center">

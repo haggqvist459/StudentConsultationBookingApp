@@ -4,30 +4,14 @@ import FullCalendar, { formatDate, NowIndicatorRoot } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { Grid, Typography, Button, withStyles } from '@material-ui/core';
+import { Grid, Typography, Button } from '@material-ui/core';
 
-
-const ConsulButton = withStyles({
-    root: {
-        fontSize: '16px',
-        letterSpacing: '0.86px',
-        lineHeight: '14px',
-        textTransform: 'none',
-        color: 'black',
-        border: '1px',
-        borderColor: 'black',
-        '&:hover': {
-            backgroundColor: 'white',
-        }
-    },
-})(Button);
 
 function Calendar({ props }) {
 
     const [eventClick, setEventClick] = useState(false);
     const [currentEvent, setCurrentEvent] = useState({});
-
-    console.log(props);
+    console.log('calendar props', props);
 
     function handleEventClick(clickInfo) {
         // if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
@@ -44,7 +28,7 @@ function Calendar({ props }) {
         );
     }
 
-    useEffect(() => {}, [currentEvent])
+    useEffect(() => { }, [currentEvent])
 
 
     function eventStatus() {
@@ -83,7 +67,6 @@ function Calendar({ props }) {
 
 
     }
-
 
     return (
         <Grid container direction={"column"} justify="center" alignItems="center">
@@ -138,9 +121,6 @@ function Calendar({ props }) {
                     </Grid>
                 }
             </Grid>
-
-
-
 
         </Grid>
     )

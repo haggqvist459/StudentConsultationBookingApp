@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { withRouter } from 'react-router';
 import { Grid } from '@material-ui/core';
 import { RouterHeader } from '../components';
@@ -13,6 +13,15 @@ const Profile = function ({ history }) {
   const { currentUserRole } = useContext(AuthContext);
   const role = currentUserRole;
   console.log("role", role);
+
+  const [state, setState] = useState({
+    uiState: {
+      mounted: false,
+      action: null,
+    },
+    data: null
+  })
+
   //click back to home page
   function handleClick() {
     try {
@@ -24,10 +33,23 @@ const Profile = function ({ history }) {
 
   //fetch all the data from the database here and then pass it to the components as props.
 
+  useEffect(() => {
+
+    if (!state.uiState.mounted) {
+      setState({
+        ...state,
+        uiState: {
+          mounted: true,
+        }
+      })
+    }
+  }, [state])
+
+
   return (
     <Grid>
       <Grid className='RouterHeader'>
-        <RouterHeader onClick={handleClick} link={'Home'}/>
+        <RouterHeader onClick={handleClick} link={'Home'} />
       </Grid>
 
       <Grid container className='content' justify="center" alignItems="center">
@@ -40,7 +62,7 @@ const Profile = function ({ history }) {
               <AdminProfile />
             ),
             teacher: (
-              <TeacherProfile />
+              <TeacherProfile props={state.data} />
             ),
             default: (
               <>Error</>

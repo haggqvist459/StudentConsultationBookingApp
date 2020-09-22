@@ -39,7 +39,8 @@ async function checkCurrentTerm() {
 
 async function uploadTermFile({ termData, fileType }) {
 
-    console.log(termData);
+    console.log('adminservices', termData, fileType);
+    console.log('adminservices', fileType);
     const db = firebase.firestore();
 
     switch (fileType) {
@@ -100,14 +101,15 @@ async function uploadTermFile({ termData, fileType }) {
             }
 
             coursesRef.set(termCourses)
-                .catch(function () {
-                    console.log('courses reject')
-                    reject(FIREBASE_CONSTANTS.COURSES_UPLOAD_FAILURE)
-                })
-                .then(function () {
-                    console.log('courses resolve')
-                    resolve(FIREBASE_CONSTANTS.COURSES_UPLOAD_SUCCESS)
-                })
+            .catch(function () {
+                console.log('courses reject')
+                reject(FIREBASE_CONSTANTS.COURSES_UPLOAD_FAILURE)
+            })
+            .then(function () {
+                console.log('courses resolve')
+                resolve(FIREBASE_CONSTANTS.COURSES_UPLOAD_SUCCESS)
+            })
+           
         })
     }
 
