@@ -4,6 +4,7 @@ import { Grid, Typography, Button, styled, CircularProgress } from '@material-ui
 import { adminServices, DESIGN, FILETYPES } from '../utils';
 import "react-datepicker/dist/react-datepicker.css";
 import { FileDrop } from './dropZone';
+import moment from 'moment';
 
 const ToolButton = styled(Button)({
     background: DESIGN.PRIMARY_COLOR,
@@ -58,8 +59,6 @@ export function AddTerm() {
         let courses = await adminServices.uploadTermFile({ termData: JSON.parse(localStorage.getItem('COURSES')), fileType: FILETYPES.COURSES_FILE });
         let enrollments = await adminServices.uploadTermFile({ termData: JSON.parse(localStorage.getItem('ENROLLMENTS')), fileType: FILETYPES.ENROLLMENTS_FILE });
 
-        console.log('upload finished')
-        console.log('serviceResponse: ', users);
 
         setNewTermState({
             ...newTermState,
@@ -101,12 +100,6 @@ export function AddTerm() {
                 break;
             case FILETYPES.COURSES_FILE:
                 console.log('courses read complete: ', fileType)
-                let courses = JSON.parse(localStorage.getItem('COURSES'));
-                courses.forEach((item) => {
-                    item.startDate = newTermState.termDates.termStart;
-                    item.endDate = newTermState.termDates.termEnd;
-                })
-                console.log(courses);
                 setNewTermState({
                     ...newTermState,
                     coursesFileStatus: {
@@ -250,10 +243,14 @@ export function AddTerm() {
             <Grid>
                 {newTermState.termDates.termStart ?
                     <DatePicker selected={newTermState.termDates.termStart}
-                        onChange={date => setNewTermState({ ...newTermState, termDates: { ...newTermState.termDates, termStart: date } })} />
+                        onChange={date => localStorage.setItem('STARTS', moment(date).format('MM/DD/YYYY'),
+                        setNewTermState({ ...newTermState, termDates: { ...newTermState.termDates, termStart: date } }))} 
+                        />
                     :
                     <DatePicker selected={newTermState.termDates.today}
-                        onChange={date => setNewTermState({ ...newTermState, termDates: { ...newTermState.termDates, termStart: date } })} />
+                        onChange={date => localStorage.setItem('STARTS', moment(date).format('MM/DD/YYYY'),
+                        setNewTermState({ ...newTermState, termDates: { ...newTermState.termDates, termStart: date } }))} 
+                        />
                 }
             </Grid>
         )
@@ -264,10 +261,14 @@ export function AddTerm() {
             <Grid>
                 {newTermState.termDates.termEnd ?
                     <DatePicker selected={newTermState.termDates.termEnd}
-                        onChange={date => setNewTermState({ ...newTermState, termDates: { ...newTermState.termDates, termEnd: date } })} />
+                        onChange={date => localStorage.setItem('ENDS', moment(date).format('MM/DD/YYYY'),
+                        setNewTermState({ ...newTermState, termDates: { ...newTermState.termDates, termEnd: date } }))} 
+                        />
                     :
                     <DatePicker selected={newTermState.termDates.today}
-                        onChange={date => setNewTermState({ ...newTermState, termDates: { ...newTermState.termDates, termEnd: date } })} />
+                        onChange={date => localStorage.setItem('ENDS', moment(date).format('MM/DD/YYYY'),
+                        setNewTermState({ ...newTermState, termDates: { ...newTermState.termDates, termEnd: date } }))} 
+                        />
                 }
             </Grid>
         )

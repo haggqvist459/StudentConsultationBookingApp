@@ -106,6 +106,7 @@ function Topics({ topics, updateList }) {
     }
 
     async function updateTopicData() {
+
         try {
             setTopicUiState({
                 ...topicUiState,
@@ -384,19 +385,19 @@ function Topics({ topics, updateList }) {
                                 style={{ marginBottom: '30px' }}
                             />
 
-                            {topicUiState.topic && topicUiState.topic ? 
+                            {topicUiState.topic && topicUiState.topic ?
                                 <BlueButton
-                                type={TOOL_BUTTON.SAVE}
-                                onClick={() => onClick({ type: TOOL_BUTTON.SAVE, topic: topicUiState.topic })}>
-                                Save
+                                    type={TOOL_BUTTON.SAVE}
+                                    onClick={() => onClick({ type: TOOL_BUTTON.SAVE, topic: topicUiState.topic })}>
+                                    Save
                             </BlueButton>
-                            :
-                            <BlueButton
-                                disabled>
-                                Save
+                                :
+                                <BlueButton
+                                    disabled>
+                                    Save
                             </BlueButton>
                             }
-                            
+
                             <BlueButton
                                 type={TOOL_BUTTON.RETURN}
                                 onClick={() => onClick({ type: TOOL_BUTTON.RETURN, topic: topicUiState.topic })}
