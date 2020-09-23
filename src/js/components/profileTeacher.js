@@ -4,8 +4,23 @@ import { useLocation } from "react-router-dom";
 import { DESIGN, teacherServices, AuthContext } from '../utils';
 import { TeacherSubject } from './teacherSubject';
 
-const ToolButton = styled(Button)({
+const BlueButton = styled(Button)({
     background: DESIGN.PRIMARY_COLOR,
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(0, 174, 179, .3)',
+    color: 'white',
+    height: 48,
+    minWidth: '150px',
+    padding: '0 30px',
+    margin: '10px',
+    '&:hover': {
+        backgroundColor: DESIGN.PRIMARY_COLOR,
+    }
+});
+
+const RedButton = styled(Button)({
+    background: DESIGN.BUTTON_RED,
     border: 0,
     borderRadius: 3,
     boxShadow: '0 3px 5px 2px rgba(0, 174, 179, .3)',
@@ -34,22 +49,23 @@ function Profile() {
             termData: null,
             topics: null,
         },
-        unfinishedCourses: null,
-        finishedCourses: null,
+        data: {
+            unfinishedCourses: null,
+            finishedCourses: null,
+            approved: null,
+            requests: null,
+        }
     })
 
     let unfinished = [];
     let finished = [];
+    let approved = [];
+    let requests = [];
 
     useEffect(() => {
+        console.log('location state ', location.state.courses)
         if (!state.refreshing) {
             if (!state.mounted) {
-                setState({
-                    ...state,
-                    uiState: {
-                        mounted: true,
-                    }
-                })
                 if (location.state.courses) {
                     location.state.courses.forEach((item, index) => {
                         if (item.startTime === 'teacher must assign') {
@@ -59,11 +75,30 @@ function Profile() {
                         else {
                             finished.push(item);
                         }
+
+                        item.consultations.forEach((consul) => {
+                            if (consul.booked || consul.approved) {
+                                if (consul.booked) {
+                                    requests.push(consul)
+                                }
+                                else {
+                                    approved.push(consul)
+                                }
+                            }
+                        })
                     })
                     setState({
                         ...state,
-                        unfinishedCourses: unfinished,
-                        finishedCourses: finished,
+                        uiState: {
+                            mounted: true,
+                        },
+                        data: {
+                            ...state.data,
+                            unfinishedCourses: unfinished,
+                            finishedCourses: finished,
+                            approved: approved,
+                            requests: requests,
+                        }
                     })
                 }
             }
@@ -81,6 +116,17 @@ function Profile() {
         })
     }
 
+    function buttonClick({ action }) {
+        switch (action) {
+            case 'cancel':
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
     async function updateSubject() {
         console.log('updating item');
         await teacherServices.updateSubject();
@@ -96,6 +142,17 @@ function Profile() {
             else {
                 finished.push(item);
             }
+
+            item.consultations.forEach((consul) => {
+                if (consul.booked || consul.approved) {
+                    if (consul.booked) {
+                        requests.push(consul)
+                    }
+                    else {
+                        approved.push(consul)
+                    }
+                }
+            })
         })
         setState({
             ...state,
@@ -103,9 +160,40 @@ function Profile() {
                 ...state.uiState,
                 refreshing: true,
             },
-            unfinishedCourses: unfinished,
-            finishedCourses: finished,
+            data: {
+                ...state.data,
+                unfinishedCourses: unfinished,
+                finishedCourses: finished,
+                approved: approved,
+                requests: requests,
+            }
         })
+    }
+
+    function PendingConsultation({ consultation }) {
+        console.log('consul: ', consultation);
+        return (
+            <Grid container direction={'row'} style={{ marginTop: '30px' }}>
+                <Grid container direction={'row'} justify={'center'}>
+                    <Typography> Subject: {consultation.subject} on: {consultation.date} between: {consultation.starting}:{consultation.ending}</Typography>
+
+                </Grid>
+
+                <Grid container direction={'row'} justify={'center'}>
+                    <RedButton onClick={() => buttonClick({ action: 'cancel' })}>
+                        Cancel
+                </RedButton>
+                </Grid>
+            </Grid>
+        )
+    }
+
+    function ApprovedConsultation({ consultation }) {
+        return (
+            <Grid container direction={'row'} style={{ marginTop: '30px' }}>
+                <Typography> Subject: {consultation.subject} on: {consultation.date} between: {consultation.starting}:{consultation.ending}</Typography>
+            </Grid>
+        )
     }
 
     function ActiveComponent() {
@@ -132,6 +220,32 @@ function Profile() {
                         <Typography>courses</Typography>
                     </Grid>
                 )
+
+            case 'requests':
+                return (
+                    <Grid container direction={'row'} justify={'center'}>
+                        {state.data.requests.map((item, index) => {
+                            return (
+                                <Grid key={index}>
+                                    <PendingConsultation consultation={item} />
+                                </Grid>
+                            )
+                        })}
+                    </Grid>
+                )
+
+            case 'approved':
+                return (
+                    <Grid container direction={'row'} justify={'center'}>
+                        {state.data.approved.map((item, index) => {
+                            return (
+                                <Grid key={index}>
+                                    <ApprovedConsultation consultation={item} />
+                                </Grid>
+                            )
+                        })}
+                    </Grid>
+                )
             default:
                 return null;
         }
@@ -147,27 +261,49 @@ function Profile() {
 
                 <Grid container direction={'column'} alignItems={'flex-start'} item xs={12} sm={12} md={2} lg={2} xl={2} style={{ marginTop: '40px' }}>
 
-                    {state.unfinishedCourses && state.unfinishedCourses ?
-                        <ToolButton onClick={() => handleToolClick('update')}>
-                            Update
-                        <Badge badgeContent={state.unfinishedCourses.length} color="primary" style={{ marginLeft: '15px' }}>
-                            </Badge>
-                        </ToolButton>
+                    {state.data.unfinishedCourses && state.data.unfinishedCourses.length > 0 ?
+                        <BlueButton onClick={() => handleToolClick('update')}
+                            endIcon={<Badge badgeContent={state.data.unfinishedCourses.length} color="primary" style={{ marginLeft: '3px' }}></Badge>}>
+                            Setup
+                        </BlueButton>
                         :
-                        null
+                        <BlueButton disabled>
+                            Setup
+                        </BlueButton>
                     }
 
-                    {state.finishedCourses && state.finishedCourses.length > 0 ?
-                        <ToolButton onClick={() => handleToolClick('courses')}>
+                    {state.data.finishedCourses && state.data.finishedCourses.length > 0 ?
+                        <BlueButton
+                            onClick={() => handleToolClick('courses')}
+                            endIcon={<Badge badgeContent={state.data.finishedCourses.length} color="primary" style={{ marginLeft: '3px' }}></Badge>}>
                             Courses
-                        <Badge badgeContent={state.finishedCourses.length} color="primary" style={{ marginLeft: '15px' }}>
-
-                            </Badge>
-                        </ToolButton>
+                        </BlueButton>
                         :
-                        <ToolButton disabled>
+                        <BlueButton disabled>
                             Courses
-                    </ToolButton>
+                        </BlueButton>
+                    }
+
+                    {state.data.requests && state.data.requests.length > 0 ?
+                        <BlueButton onClick={() => handleToolClick('requests')}
+                            endIcon={<Badge badgeContent={state.data.requests.length} color="primary" style={{ marginLeft: '3px' }}></Badge>}>
+                            Requests
+                        </BlueButton>
+                        :
+                        <BlueButton disabled>
+                            Requests
+                        </BlueButton>
+                    }
+
+                    {state.data.approved && state.data.approved.length > 0 ?
+                        <BlueButton onClick={() => handleToolClick('approved')}
+                            endIcon={<Badge badgeContent={state.data.approved.length} color="primary" style={{ marginLeft: '3px' }}></Badge>}>
+                            Approved
+                        </BlueButton>
+                        :
+                        <BlueButton disabled>
+                            Approved
+                        </BlueButton>
                     }
 
                 </Grid>

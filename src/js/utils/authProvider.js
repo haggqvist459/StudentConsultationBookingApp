@@ -17,7 +17,6 @@ export const AuthProvider = ({ children }) => {
             // is the user a student
             if (email === '6709@ait.nsw.edu.au') {
                 console.log('max is a teacher')
-                console.log("User is a student");
                 setCurrentUserRole(ROLE_CONSTANTS.TEACHER);
             }
             else {

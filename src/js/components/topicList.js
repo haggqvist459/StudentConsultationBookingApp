@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Grid, Typography, CircularProgress, TextField } from '@material-ui/core';
 import { TOOL_BUTTON, DESIGN, adminServices } from '../utils';
 import { IconButton, Button, styled, GridList, makeStyles } from '@material-ui/core';
-import { Edit, ArrowBack, Delete } from '@material-ui/icons';
+import { Edit, ArrowBack, ArrowForward, Delete } from '@material-ui/icons';
 import PropTypes from 'prop-types'
 
 const BlueButton = styled(Button)({
@@ -417,7 +417,77 @@ function Topics({ topics, updateList }) {
 
 Topics.propTypes = {
     topics: PropTypes.array,
-    updateList: PropTypes.func.isRequired,
+    updateList: PropTypes.func,
 }
 
-export { Topics }
+function StudentTopics({ topics, onSelect }) {
+
+    const classes = useStyles();
+    const [selected, setSelected] = useState(false);
+
+    function onClick({ topic }) {
+        console.log('topic ', topic);
+        localStorage.setItem('CURRENT TOPIC', JSON.stringify(topic))
+        setSelected(true);
+        onSelect();
+    }
+
+    function List({ data }) {
+
+        return (
+            <GridList cellHeight={20} className={classes.gridList} cols={1}>
+                {data.map((topic, index) => (
+                    <Grid container direction={'row'} justify={'space-between'} key={index} style={{ margin: '15px' }}>
+                        <Grid container item xs={6} sm={6} md={6} lg={6} xl={6}>
+                            <Typography>{topic.topic}</Typography>
+                        </Grid>
+
+                        <Grid container justify={'flex-end'} item xs={2} sm={2} md={2} lg={2} xl={2}>
+                            {selected ?
+                                <IconButton disabled>
+                                    <ArrowForward />
+                                </IconButton>
+                                :
+                                <IconButton onClick={() => onClick({ topic: topic })}>
+                                    <ArrowForward />
+                                </IconButton>
+                            }
+                        </Grid>
+                    </Grid>
+                ))}
+            </GridList>
+        )
+    }
+
+
+    return (
+        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+
+            <Grid container justify={'center'} style={{ marginBottom: '30px' }}>
+                <Typography>Choose a topic</Typography>
+            </Grid>
+
+            {topics ?
+                <Grid className={classes.root}>
+                    {topics && topics.length > 0 ?
+                        <List data={topics} />
+                        :
+                        <Grid>
+                            <Typography>No topics found</Typography>
+                        </Grid>
+                    }
+                </Grid>
+                :
+                <CircularProgress />
+            }
+
+        </Grid>
+    )
+}
+
+StudentTopics.propTypes = {
+    topics: PropTypes.array.isRequired,
+    onSelect: PropTypes.func,
+}
+
+export { Topics, StudentTopics }

@@ -37,6 +37,7 @@ function Profile() {
     })
 
     useEffect(() => {
+        
         async function updateList() {
             console.log('admin profile updating topic list')
             setState({

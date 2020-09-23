@@ -210,6 +210,8 @@ function FileDrop({ fileName, readComplete, readError }) {
                             endRecur: endDate,
                             startTime: 'teacher must assign',
                             endTime: 'teacher must assign',
+                            allDay: true,
+                            consultations: []
                         }
                         verifiedList.push(course);
                     })
@@ -448,7 +450,7 @@ function FileDrop({ fileName, readComplete, readError }) {
 
     return (
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-            <Box border={1} borderRadius={10} style={{ textAlign: 'center' }}>
+            <Box border={1} borderRadius={10} style={{ textAlign: 'center', minWidth: '100%' }}>
                 <Dropzone onDrop={handleFileDrop}>
                     {({ getRootProps, getInputProps }) => (
                         <Grid {...getRootProps()}>

@@ -238,18 +238,27 @@ export function AddTerm() {
         </Grid>
     )
 
+
     function StartDate() {
+
+        const isMonday = date => {
+            const day = date.getDay();
+            return day === 1;
+        };
+
         return (
             <Grid>
                 {newTermState.termDates.termStart ?
                     <DatePicker selected={newTermState.termDates.termStart}
                         onChange={date => localStorage.setItem('STARTS', moment(date).format('MM/DD/YYYY'),
                         setNewTermState({ ...newTermState, termDates: { ...newTermState.termDates, termStart: date } }))} 
+                        filterDate={isMonday}
                         />
                     :
                     <DatePicker selected={newTermState.termDates.today}
                         onChange={date => localStorage.setItem('STARTS', moment(date).format('MM/DD/YYYY'),
                         setNewTermState({ ...newTermState, termDates: { ...newTermState.termDates, termStart: date } }))} 
+                        filterDate={isMonday}
                         />
                 }
             </Grid>
@@ -257,17 +266,25 @@ export function AddTerm() {
     }
 
     function EndDate() {
+
+        const isFriday = date => {
+            const day = date.getDay();
+            return day === 5;
+        };
+
         return (
             <Grid>
                 {newTermState.termDates.termEnd ?
                     <DatePicker selected={newTermState.termDates.termEnd}
                         onChange={date => localStorage.setItem('ENDS', moment(date).format('MM/DD/YYYY'),
                         setNewTermState({ ...newTermState, termDates: { ...newTermState.termDates, termEnd: date } }))} 
+                        filterDate={isFriday}
                         />
                     :
                     <DatePicker selected={newTermState.termDates.today}
                         onChange={date => localStorage.setItem('ENDS', moment(date).format('MM/DD/YYYY'),
                         setNewTermState({ ...newTermState, termDates: { ...newTermState.termDates, termEnd: date } }))} 
+                        filterDate={isFriday}
                         />
                 }
             </Grid>

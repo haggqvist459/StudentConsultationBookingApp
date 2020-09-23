@@ -1,5 +1,6 @@
 import { firebase } from './fbConfig';
 import { FIREBASE_CONSTANTS, ERRORS } from './constants';
+import moment from 'moment';
 
 export const teacherServices = {
     teacherSubjects,
@@ -53,9 +54,6 @@ export async function teacherSubjects({ email }) {
         courses.courses.forEach((item, index) => {
             if (userEnrollments.find(course => course === item.courseID)) {
                 console.log('course find', item.longName)
-
-                // startTime = item.consultationTimeOfDay
-                // endTime = startTime + 30 mins or 60 if teacher chose
                 let course = {
                     courseID: item.courseID,
                     integrationID: item.integrationID,
@@ -73,6 +71,8 @@ export async function teacherSubjects({ email }) {
                     endRecur: item.endRecur,
                     startTime: item.startTime,
                     endTime: item.endTime,
+                    title: item.title,
+                    consultations: item.consultations,
                 }
                 userCourses.push(course);
             }
@@ -95,6 +95,10 @@ export async function updateSubject() {
     const subjectRef = db.collection(FIREBASE_CONSTANTS.CURRENT_TERM_COLLECTION).doc(FIREBASE_CONSTANTS.COURSES_DOC);
     let courses = [];
 
+    function weeksBetween(starts, ends) {
+        return Math.round((starts - ends) / (7 * 24 * 60 * 60 * 1000));
+    }
+
     try {
         return new Promise((resolve, reject) => {
             subjectRef.get().then(function (snapshot) {
@@ -103,63 +107,53 @@ export async function updateSubject() {
                     reject('no courses found')
                 }
                 else {
-                    snapshot.data().courses.slice().reverse().forEach(function(item, index, object) {
-                        if (item.longName === subject.longName) {
-                            courses.splice(object.length - 1 - index, 1);
+                    snapshot.data().courses.forEach(function (item, index) {
+                        if (item.longName) {
                             let course = {
-                                courseID: subject.courseID,
-                                integrationID: subject.integrationID,
-                                shortName: subject.shortName,
-                                longName: subject.longName,
-                                accountID: subject.accountID,
-                                termID: subject.termID,
-                                status: subject.status,
-                                termStart: subject.termStart,
-                                termEnd: subject.termEnd,
-                                format: subject.format,
-                                blueprintID: subject.blueprintID,
-                                daysOfWeek: [parseInt(subject.daysOfWeek)],
-                                startRecur: subject.startRecur,
-                                endRecur: subject.endRecur,
-                                startTime: subject.startTime,
-                                endTime: subject.endTime,
+                                courseID: item.courseID,
+                                integrationID: item.integrationID,
+                                shortName: item.shortName,
+                                longName: item.longName,
+                                accountID: item.accountID,
+                                termID: item.termID,
+                                status: item.status,
+                                termStart: item.termStart,
+                                termEnd: item.termEnd,
+                                format: item.format,
+                                blueprintID: item.blueprintID,
+                                daysOfWeek: item.daysOfWeek,
+                                startRecur: item.startRecur,
+                                endRecur: item.endRecur,
+                                startTime: item.startTime,
+                                endTime: item.endTime,
+                                title: item.longName,
+                                allDay: item.allDay,
+                                consultations: item.consultations,
                             }
+                            if (item.longName === subject.longName) {
+                                course.daysOfWeek = subject.daysOfWeek;
+                                course.startTime = subject.startTime;
+                                course.endTime = subject.endTime;
+                                course.consultations = [];
+
+                                for (let i = 0; i < weeksBetween(Date.parse(item.endRecur), Date.parse(item.startRecur)); i++) {
+                                    let date = moment(item.startRecur).day(subject.daysOfWeek).add((i * 7), 'days').format('YYYY-MM-DD');
+                                    console.log('date ', date);
+                                    let consultation = {
+                                        date: date,
+                                        booked: false,
+                                        confirmed: false,
+                                        topic: null,
+                                        student: null,
+                                    }
+                                    course.consultations.push(consultation);
+                                }
+                            }
+
+                            console.log('updated course: ', course);
                             courses.push(course);
                         }
-                        else {
-                            courses.push(item);
-                        }
-                      });
-
-
-                    // snapshot.data().courses.forEach((item, index) => {
-                    //     if (item.longName === subject.longName) {
-                    //         console.log('course found ', item.longName, ' at ', index);
-                    //         let course = {
-                    //             courseID: subject.courseID,
-                    //             integrationID: subject.integrationID,
-                    //             shortName: subject.shortName,
-                    //             longName: subject.longName,
-                    //             accountID: subject.accountID,
-                    //             termID: subject.termID,
-                    //             status: subject.status,
-                    //             termStart: subject.termStart,
-                    //             termEnd: subject.termEnd,
-                    //             format: subject.format,
-                    //             blueprintID: subject.blueprintID,
-                    //             daysOfWeek: [parseInt(subject.daysOfWeek)],
-                    //             startRecur: subject.startRecur,
-                    //             endRecur: subject.endRecur,
-                    //             startTime: subject.startTime,
-                    //             endTime: subject.endTime,
-                    //         }
-                    //         courses.push(course);
-                    //     }
-                    //     else {
-                           
-                    //     }
-                        
-                    // })
+                    });
                 }
             }).then(function () {
 
