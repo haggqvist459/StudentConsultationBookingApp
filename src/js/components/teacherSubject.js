@@ -30,6 +30,7 @@ const BlueRadio = withStyles({
     checked: {},
 })((props) => <Radio color="default" {...props} />);
 
+
 function TeacherSubject({ subject, updateSubject }) {
     console.log(subject);
     console.log('teacher subject')
@@ -51,7 +52,7 @@ function TeacherSubject({ subject, updateSubject }) {
             subject.daysOfWeek = day;
             subject.startTime = moment(startDate.getTime()).format('HH:mm');
             subject.endTime = moment(endDate.getTime()).format('HH:mm');
-            console.log('start date',  subject.startTime);
+            console.log('start date', subject.startTime);
             localStorage.setItem('CURRENT UPDATE', JSON.stringify(subject))
             updateSubject();
         };
@@ -153,9 +154,54 @@ function TeacherSubject({ subject, updateSubject }) {
     )
 }
 
+function ViewSubject({ subject }) {
+    console.log(subject);
+    console.log('teacher view subject')
+   
+    function AssignedDayAndTime() {
+
+        return (
+            <Grid container direction={'row'} justify={'space-evenly'}>
+                <Grid container direction={'row'} item xs={6} sm={6} md={6} lg={6} xl={6} justify={'space-around'} style={{ marginTop: '30px' }}>
+                    <Grid>
+                        <Typography>Starting: {subject.startTime}</Typography>
+                        <Typography>Ending: {subject.endTime}</Typography>
+                    </Grid>
+                </Grid>
+            </Grid>
+        );
+    }
+
+    return (
+        <Grid container direction={'row'} justify={'space-evenly'} item xs={4} sm={4} md={4} lg={4} xl={4}>
+
+                <Grid container direction={'row'} justify={'space-evenly'} item xs={12} sm={12} md={12} lg={12} xl={12}>
+
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={12} style={{ marginBottom: '70px' }}>
+
+                        <Grid container direction={'row'} justify={'center'} style={{ marginTop: '10px' }}>
+                            <Typography>{subject.longName}</Typography>
+                        </Grid>
+
+                        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                            <AssignedDayAndTime />
+                        </Grid>
+
+                    </Grid>
+
+                </Grid>
+            </Grid>
+    )
+}
+
+
 TeacherSubject.propTypes = {
     subject: PropTypes.object.isRequired,
     updateSubject: PropTypes.func.isRequired,
 }
 
-export { TeacherSubject }
+ViewSubject.propTypes = {
+    subject: PropTypes.object.isRequired,
+}
+
+export { TeacherSubject, ViewSubject }

@@ -49,7 +49,6 @@ const Home = function ({ history }) {
 
     const { currentUserRole } = useContext(AuthContext);
     const { currentUser } = useContext(AuthContext);
-    let courseList = [];
 
     //click to profile page
     function handleClick() {
@@ -65,9 +64,10 @@ const Home = function ({ history }) {
                 case ROLE_CONSTANTS.TEACHER:
                     // for some reason, using state variables here like state.data.courseList 
                     // or state.data.calendarContent returns empty list in state location on teacher profile...
+                    // using localstorage instead
                     history.push({
                         pathname: '/profile',
-                        state: { courses: courseList }
+                        //state: { courses: courseList }
                     })
                     break;
                 case ROLE_CONSTANTS.ADMIN:
@@ -177,9 +177,9 @@ const Home = function ({ history }) {
                 case ROLE_CONSTANTS.TEACHER:
                     let subjects = await teacherServices.teacherSubjects({ email: currentUser.email });
                     
-                    subjects.forEach((item, index) => {
-                        courseList.push(item);
-                    })
+                    // subjects.forEach((item, index) => {
+                    //     courseList.push(item);
+                    // })
                     setState({
                         ...state,
                         uiState: {
@@ -192,6 +192,7 @@ const Home = function ({ history }) {
                             calendarContent: subjects,
                         }
                     })
+                    localStorage.setItem('TEACHER SUBJECTS', JSON.stringify(subjects));
                     console.log('teacher subjects finished state')
                     break;
                 case ROLE_CONSTANTS.ADMIN:
@@ -202,6 +203,11 @@ const Home = function ({ history }) {
                             mounted: true,
                             calendarLoading: false,
                         },
+                        data: {
+                            ...state.data,
+                            calendarContent: await studentServices.studentSubjects({ email: currentUser.email }),
+                            topicsList: await studentServices.studentTopics(),
+                        }
                     })
                     console.log('admin subjects finished state')
                     break;

@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Grid, Typography, Button, styled, Badge } from '@material-ui/core';
-import { useLocation } from "react-router-dom";
+import { Grid, Typography, Button, styled, Badge, CircularProgress } from '@material-ui/core';
 import { DESIGN, teacherServices, AuthContext } from '../utils';
-import { TeacherSubject } from './teacherSubject';
+import { TeacherSubject, ViewSubject } from './teacherSubject';
 
 const BlueButton = styled(Button)({
     background: DESIGN.PRIMARY_COLOR,
@@ -15,7 +14,7 @@ const BlueButton = styled(Button)({
     padding: '0 30px',
     margin: '10px',
     '&:hover': {
-        backgroundColor: DESIGN.PRIMARY_COLOR,
+        backgroundColor: DESIGN.HOVER_BLUE,
     }
 });
 
@@ -30,13 +29,12 @@ const RedButton = styled(Button)({
     padding: '0 30px',
     margin: '10px',
     '&:hover': {
-        backgroundColor: DESIGN.PRIMARY_COLOR,
+        backgroundColor: DESIGN.HOVER_BLUE,
     }
 });
 
 function Profile() {
 
-    const location = useLocation();
     const { currentUser } = useContext(AuthContext);
 
     const [state, setState] = useState({
@@ -44,6 +42,7 @@ function Profile() {
             mounted: false,
             activeComponent: null,
             refreshing: false,
+            consultationLoading: false,
         },
         serviceResponse: {
             termData: null,
@@ -63,48 +62,64 @@ function Profile() {
     let requests = [];
 
     useEffect(() => {
-        console.log('location state ', location.state.courses)
-        if (!state.refreshing) {
-            if (!state.mounted) {
-                if (location.state.courses) {
-                    location.state.courses.forEach((item, index) => {
-                        if (item.startTime === 'teacher must assign') {
-                            console.log('unfinished course found')
-                            unfinished.push(item);
-                        }
-                        else {
-                            finished.push(item);
-                        }
 
-                        item.consultations.forEach((consul) => {
-                            if (consul.booked || consul.approved) {
-                                if (consul.booked) {
-                                    requests.push(consul)
-                                }
-                                else {
-                                    approved.push(consul)
-                                }
-                            }
-                        })
-                    })
-                    setState({
-                        ...state,
-                        uiState: {
-                            mounted: true,
-                        },
-                        data: {
-                            ...state.data,
-                            unfinishedCourses: unfinished,
-                            finishedCourses: finished,
-                            approved: approved,
-                            requests: requests,
-                        }
-                    })
-                }
-            }
+        async function refreshSubjects() {
+
+            console.log('updating subjects');
+            await teacherServices.updateSubject().then(function () {
+
+                console.log('finished updating');
+                initTeacher();
+            })
         }
 
-    }, []);
+        async function initTeacher() {
+
+            let updatedCourseList = await teacherServices.teacherSubjects({ email: currentUser.email });
+            updatedCourseList.forEach((item, index) => {
+                if (item.startTime === 'teacher must assign') {
+                    console.log('unfinished course found')
+                    unfinished.push(item);
+                }
+                else {
+                    finished.push(item);
+                }
+
+                item.consultations.forEach((consul) => {
+                    if (consul.booked) {
+                        requests.push(consul)
+                    }
+                    else if (consul.confirmed) {
+                        approved.push(consul)
+                    }
+                })
+            })
+
+            setState({
+                ...state,
+                uiState: {
+                    ...state.uiState,
+                    mounted: true,
+                    refreshing: false,
+                },
+                data: {
+                    ...state.data,
+                    unfinishedCourses: unfinished,
+                    finishedCourses: finished,
+                    approved: approved,
+                    requests: requests,
+                }
+            })
+        }
+
+        if (!state.uiState.mounted) {
+            initTeacher();
+        }
+        else if (state.uiState.refreshing) {
+            refreshSubjects();
+        }
+
+    }, [state]);
 
     function handleToolClick(tool) {
         setState({
@@ -116,139 +131,50 @@ function Profile() {
         })
     }
 
-    function buttonClick({ action }) {
+    function consulButton({ action, consul }) {
+
         switch (action) {
             case 'cancel':
-
+                consul.booked = false;
+                consul.confirmed = false;
+                consul.topic = 'none';
+                consul.student = 'none';
                 break;
-
+            case 'approve':
+                consul.confirmed = true;
+                consul.booked = false;
+                break;
             default:
                 break;
         }
+
+        localStorage.setItem('CURRENT SLOT', JSON.stringify(consul));
+        updateConsultation();
     }
 
-    async function updateSubject() {
-        console.log('updating item');
-        await teacherServices.updateSubject();
-        console.log('finished wait');
-        let updatedCourseList = await teacherServices.teacherSubjects({ email: currentUser.email });
-        unfinished = [];
-        finished = [];
-        updatedCourseList.forEach((item, index) => {
-            if (item.startTime === 'teacher must assign') {
-                console.log('unfinished course found')
-                unfinished.push(item);
-            }
-            else {
-                finished.push(item);
-            }
-
-            item.consultations.forEach((consul) => {
-                if (consul.booked || consul.approved) {
-                    if (consul.booked) {
-                        requests.push(consul)
-                    }
-                    else {
-                        approved.push(consul)
-                    }
+    async function updateConsultation() {
+        console.log('updating subjects');
+        await teacherServices.updateConsultation().then(function () {
+            console.log('finished wait');
+            setState({
+                ...state,
+                uiState: {
+                    ...state.uiState,
+                    refreshing: true,
                 }
             })
         })
+    }
+
+    function updateSubject() {
+        console.log('updating subjects');
         setState({
             ...state,
             uiState: {
                 ...state.uiState,
                 refreshing: true,
-            },
-            data: {
-                ...state.data,
-                unfinishedCourses: unfinished,
-                finishedCourses: finished,
-                approved: approved,
-                requests: requests,
             }
         })
-    }
-
-    function PendingConsultation({ consultation }) {
-        console.log('consul: ', consultation);
-        return (
-            <Grid container direction={'row'} style={{ marginTop: '30px' }}>
-                <Grid container direction={'row'} justify={'center'}>
-                    <Typography> Subject: {consultation.subject} on: {consultation.date} between: {consultation.starting}:{consultation.ending}</Typography>
-
-                </Grid>
-
-                <Grid container direction={'row'} justify={'center'}>
-                    <RedButton onClick={() => buttonClick({ action: 'cancel' })}>
-                        Cancel
-                </RedButton>
-                </Grid>
-            </Grid>
-        )
-    }
-
-    function ApprovedConsultation({ consultation }) {
-        return (
-            <Grid container direction={'row'} style={{ marginTop: '30px' }}>
-                <Typography> Subject: {consultation.subject} on: {consultation.date} between: {consultation.starting}:{consultation.ending}</Typography>
-            </Grid>
-        )
-    }
-
-    function ActiveComponent() {
-        switch (state.uiState.activeComponent) {
-            // view term not implemented !
-            case 'update':
-                return (
-                    <Grid container direction={'row'} justify={'center'} item xs={12} sm={12} md={8} lg={8} xl={8} style={{ marginTop: '40px' }}>
-                        <Grid style={{ marginBottom: '40px', textAlign: 'center' }}>
-                            <Grid container justify={'center'} item xs={12} sm={12} md={12} lg={12} xl={12}><Typography>These courses need to be assigned a day for consultations</Typography></Grid>
-                            <Grid container justify={'center'} item xs={12} sm={12} md={12} lg={12} xl={12}><Typography>Students will not be able to make bookings until a day and time is set</Typography></Grid>
-                        </Grid>
-                        {state.unfinishedCourses.map((item, index) => {
-                            return (
-                                <TeacherSubject subject={item} key={index} updateSubject={updateSubject} />
-                            )
-                        })}
-                    </Grid>
-                )
-            // edit course consultation day or time ? 
-            case 'courses':
-                return (
-                    <Grid container direction={'row'} justify={'center'} item xs={12} sm={12} md={6} lg={6} xl={6} style={{ marginTop: '40px' }}>
-                        <Typography>courses</Typography>
-                    </Grid>
-                )
-
-            case 'requests':
-                return (
-                    <Grid container direction={'row'} justify={'center'}>
-                        {state.data.requests.map((item, index) => {
-                            return (
-                                <Grid key={index}>
-                                    <PendingConsultation consultation={item} />
-                                </Grid>
-                            )
-                        })}
-                    </Grid>
-                )
-
-            case 'approved':
-                return (
-                    <Grid container direction={'row'} justify={'center'}>
-                        {state.data.approved.map((item, index) => {
-                            return (
-                                <Grid key={index}>
-                                    <ApprovedConsultation consultation={item} />
-                                </Grid>
-                            )
-                        })}
-                    </Grid>
-                )
-            default:
-                return null;
-        }
     }
 
     return (
@@ -322,6 +248,106 @@ function Profile() {
             </Grid>
         </Grid>
     )
+
+
+    function ActiveComponent() {
+        switch (state.uiState.activeComponent) {
+            // view term not implemented !
+            case 'update':
+                return (
+                    <Grid container direction={'row'} justify={'center'} item xs={12} sm={12} md={8} lg={8} xl={8} style={{ marginTop: '40px' }}>
+                        <Grid style={{ marginBottom: '40px', textAlign: 'center' }}>
+                            <Grid container justify={'center'} item xs={12} sm={12} md={12} lg={12} xl={12}><Typography>These courses need to be assigned a day for consultations</Typography></Grid>
+                            <Grid container justify={'center'} item xs={12} sm={12} md={12} lg={12} xl={12}><Typography>Students will not be able to make bookings until a day and time is set</Typography></Grid>
+                        </Grid>
+                        {state.data.unfinishedCourses.map((item, index) => {
+                            return (
+                                <TeacherSubject subject={item} key={index} updateSubject={updateSubject} />
+                            )
+                        })}
+                    </Grid>
+                )
+            // edit course consultation day or time ? 
+            case 'courses':
+                return (
+                    <Grid container direction={'row'} justify={'center'} item xs={12} sm={12} md={8} lg={8} xl={8} style={{ marginTop: '40px' }}>
+                        {state.data.finishedCourses.map((item, index) => {
+                            return (
+                                <ViewSubject subject={item} key={index} />
+                            )
+                        })}
+                    </Grid>
+                )
+
+            case 'requests':
+                return (
+                    <Grid container direction={'row'} justify={'center'} item xs={12} sm={12} md={8} lg={8} xl={8} style={{ marginTop: '40px' }}>
+                        {state.data.requests.map((item, index) => {
+                            return (
+                                <Grid key={index} container direction={'row'} justify={'center'} item xs={12} sm={12} md={12} lg={12} xl={12}>
+                                    <Consultation consultation={item} />
+                                </Grid>
+                            )
+                        })}
+                    </Grid>
+                )
+
+            case 'approved':
+                return (
+                    <Grid container direction={'row'} justify={'center'} item xs={12} sm={12} md={8} lg={8} xl={8} style={{ marginTop: '40px' }}>
+                        {state.data.approved.map((item, index) => {
+                            return (
+                                <Grid key={index} container direction={'row'} justify={'center'} item xs={12} sm={12} md={12} lg={12} xl={12}>
+                                    <Consultation consultation={item} />
+                                </Grid>
+                            )
+                        })}
+                    </Grid>
+                )
+            default:
+                return null;
+        }
+    }
+
+    function Consultation({ consultation }) {
+        console.log('consul: ', consultation);
+        return (
+            <Grid container direction={'row'} justify={'center'} style={{ marginTop: '30px' }}>
+                {state.uiState.consultationLoading && state.uiState.consultationLoading ?
+                    <CircularProgress />
+                    :
+                    <Grid>
+                        <Grid container direction={'row'} justify={'center'}>
+                            <Typography> Subject: {consultation.subject}</Typography>
+
+                        </Grid>
+
+                        <Grid container direction={'row'} justify={'center'}>
+                            <Typography> {consultation.date} at: {consultation.starts}:{consultation.ends}</Typography>
+                        </Grid>
+
+                        <Grid container direction={'row'} justify={'center'}>
+                            <Typography> with: {consultation.student}</Typography>
+                        </Grid>
+
+                        <Grid container direction={'row'} justify={'center'}>
+                            <RedButton onClick={() => consulButton({ action: 'cancel', consul: consultation })}>
+                                Cancel
+                            </RedButton>    
+                            {consultation.confirmed ? 
+                                null
+                            :
+                            <BlueButton onClick={() => consulButton({ action: 'approve', consul: consultation })}>
+                                Approve
+                            </BlueButton>
+                            }
+                            
+                        </Grid>
+                    </Grid>
+                }
+            </Grid>
+        )
+    }
 }
 
 export default Profile;

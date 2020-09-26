@@ -16,7 +16,7 @@ const ToolButton = styled(Button)({
     padding: '0 30px',
     margin: '10px',
     '&:hover': {
-        backgroundColor: DESIGN.PRIMARY_COLOR,
+        backgroundColor: DESIGN.HOVER_BLUE,
     }
 });
 
