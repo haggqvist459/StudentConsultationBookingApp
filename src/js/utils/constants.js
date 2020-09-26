@@ -26,6 +26,8 @@ export const DESIGN = {
     PRIMARY_COLOR: '#00AEB3',
     ERROR_RED: '#FF0000',
     BUTTON_RED: '#B14E62',
+    HOVER_BLUE: '#84edf0',
+    YELLOW: '#ffba66',
 }
 
 export const ROUTING_CONSTANTS = { 

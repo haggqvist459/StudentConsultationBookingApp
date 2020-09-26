@@ -2,12 +2,66 @@ import { firebase } from './fbConfig';
 import { FIREBASE_CONSTANTS, ERRORS, FILETYPES } from './constants';
 
 export const adminServices = {
+    getAllSubjects,
     checkCurrentTerm,
     uploadTermFile,
     getTopics,
     newTopic,
     updateTopic,
     deleteTopic,
+}
+
+async function getAllSubjects() {
+
+    const db = firebase.firestore();
+    const enrollmentRef = db.collection(FIREBASE_CONSTANTS.CURRENT_TERM_COLLECTION);
+    let currentUserID = '';
+    let enrollments = {};
+    let courses = {};
+    let users = {};
+    let userEnrollments = [];
+    let userCourses = [];
+
+    try {
+        await enrollmentRef.get().then(function (snapshot) {
+            if (snapshot.empty) {
+                console.log('rejecting topics')
+            }
+            else {
+                snapshot.forEach((item, index) => {
+                    switch (item.id) {
+                        case FIREBASE_CONSTANTS.USERS_DOC:
+                            users = item.data();
+                            break;
+                        case FIREBASE_CONSTANTS.ENROLLMENTS_DOC:
+                            enrollments = item.data();
+                            break;
+                        case FIREBASE_CONSTANTS.COURSES_DOC:
+                            courses = item.data();
+                            break;
+                        default:
+                            break;
+                    }
+                })
+            }
+        });
+
+        enrollments.enrollments.forEach((item, index) => {
+            userEnrollments.push(item);
+        })
+
+        courses.courses.forEach((item, index) => {
+            if (item.daysOfWeek !== "teacher must assign") {
+                userCourses.push(item);
+            }
+        })
+
+        return userCourses;
+    }
+    catch (error) {
+        console.log(error);
+        return (ERRORS.FIREBASE_ERROR);
+    }
 }
 
 async function checkCurrentTerm() {
@@ -101,15 +155,15 @@ async function uploadTermFile({ termData, fileType }) {
             }
 
             coursesRef.set(termCourses)
-            .catch(function () {
-                console.log('courses reject')
-                reject(FIREBASE_CONSTANTS.COURSES_UPLOAD_FAILURE)
-            })
-            .then(function () {
-                console.log('courses resolve')
-                resolve(FIREBASE_CONSTANTS.COURSES_UPLOAD_SUCCESS)
-            })
-           
+                .catch(function () {
+                    console.log('courses reject')
+                    reject(FIREBASE_CONSTANTS.COURSES_UPLOAD_FAILURE)
+                })
+                .then(function () {
+                    console.log('courses resolve')
+                    resolve(FIREBASE_CONSTANTS.COURSES_UPLOAD_SUCCESS)
+                })
+
         })
     }
 

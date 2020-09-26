@@ -30,6 +30,7 @@ const BlueRadio = withStyles({
     checked: {},
 })((props) => <Radio color="default" {...props} />);
 
+
 function TeacherSubject({ subject, updateSubject }) {
     console.log(subject);
     console.log('teacher subject')
@@ -37,13 +38,13 @@ function TeacherSubject({ subject, updateSubject }) {
     function AssignedDayAndTime() {
 
         const [value, setValue] = useState(null);
-        const [startDate, setStartDate] = useState(new Date());
+        const [startDate, setStartDate] = useState(Date.parse(subject.termStart));
         const [endDate, setEndDate] = useState(new Date());
-    
+
         const handleRadioChange = (event) => {
             setValue(event.target.value);
         };
-        
+
         const handleSubmit = (event) => {
             event.preventDefault();
             let day = parseInt(value);
@@ -51,14 +52,15 @@ function TeacherSubject({ subject, updateSubject }) {
             subject.daysOfWeek = day;
             subject.startTime = moment(startDate.getTime()).format('HH:mm');
             subject.endTime = moment(endDate.getTime()).format('HH:mm');
+            console.log('start date', subject.startTime);
             localStorage.setItem('CURRENT UPDATE', JSON.stringify(subject))
             updateSubject();
         };
-    
+
         return (
             <form onSubmit={handleSubmit}>
                 <Grid container direction={'row'} justify={'space-evenly'}>
-    
+
                     <Grid container direction={'row'} item xs={10} sm={10} md={10} lg={10} xl={10} justify={'center'}>
                         <FormControl component="fieldset">
                             <RadioGroup aria-label="consulDay" name="consulDay" value={value} onChange={handleRadioChange}>
@@ -72,7 +74,7 @@ function TeacherSubject({ subject, updateSubject }) {
                             </RadioGroup>
                         </FormControl>
                     </Grid>
-    
+
                     <Grid container direction={'row'} item xs={10} sm={10} md={10} lg={10} xl={10} justify={'space-around'} style={{ marginTop: '30px' }}>
                         <Grid>
                             <Typography>Starting time</Typography>
@@ -84,9 +86,12 @@ function TeacherSubject({ subject, updateSubject }) {
                                 timeIntervals={15}
                                 timeCaption="Start"
                                 dateFormat="h:mm aa"
+                                minTime={new Date().setHours(7, 0, 0, 0)}
+                                maxTime={new Date().setHours(17, 0, 0, 0)}
+                                maxDate={startDate}
                             />
                         </Grid>
-    
+
                         <Grid>
                             <Typography>Ending time</Typography>
                             <DatePicker
@@ -97,13 +102,16 @@ function TeacherSubject({ subject, updateSubject }) {
                                 timeIntervals={15}
                                 timeCaption="End"
                                 dateFormat="h:mm aa"
+                                minTime={new Date().setHours(8, 0, 0, 0)}
+                                maxTime={new Date().setHours(18, 0, 0, 0)}
+                                maxDate={endDate}
                             />
                         </Grid>
                     </Grid>
                 </Grid>
-    
+
                 <Grid container direction={'row'} justify={'center'} style={{ marginTop: '30px' }}>
-    
+
                     {value && value ?
                         <ToolButton type="submit">
                             Save
@@ -113,7 +121,7 @@ function TeacherSubject({ subject, updateSubject }) {
                             Save
                     </ToolButton>
                     }
-    
+
                 </Grid>
             </form>
         );
@@ -146,9 +154,54 @@ function TeacherSubject({ subject, updateSubject }) {
     )
 }
 
+function ViewSubject({ subject }) {
+    console.log(subject);
+    console.log('teacher view subject')
+   
+    function AssignedDayAndTime() {
+
+        return (
+            <Grid container direction={'row'} justify={'space-evenly'}>
+                <Grid container direction={'row'} item xs={6} sm={6} md={6} lg={6} xl={6} justify={'space-around'} style={{ marginTop: '30px' }}>
+                    <Grid>
+                        <Typography>Starting: {subject.startTime}</Typography>
+                        <Typography>Ending: {subject.endTime}</Typography>
+                    </Grid>
+                </Grid>
+            </Grid>
+        );
+    }
+
+    return (
+        <Grid container direction={'row'} justify={'space-evenly'} item xs={4} sm={4} md={4} lg={4} xl={4}>
+
+                <Grid container direction={'row'} justify={'space-evenly'} item xs={12} sm={12} md={12} lg={12} xl={12}>
+
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={12} style={{ marginBottom: '70px' }}>
+
+                        <Grid container direction={'row'} justify={'center'} style={{ marginTop: '10px' }}>
+                            <Typography>{subject.longName}</Typography>
+                        </Grid>
+
+                        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                            <AssignedDayAndTime />
+                        </Grid>
+
+                    </Grid>
+
+                </Grid>
+            </Grid>
+    )
+}
+
+
 TeacherSubject.propTypes = {
     subject: PropTypes.object.isRequired,
     updateSubject: PropTypes.func.isRequired,
 }
 
-export { TeacherSubject }
+ViewSubject.propTypes = {
+    subject: PropTypes.object.isRequired,
+}
+
+export { TeacherSubject, ViewSubject }
