@@ -120,20 +120,21 @@ const Home = function ({ history }) {
             case 'book':
                 let emailRes = emailRequest();
                 if (emailRes) {
-                    setState({
-                        ...state,
-                        uiState: {
-                            ...state.uiState,
-                            showTopics: false,
-                            bookingReady: false,
-                            bookingLoading: true,
-                            bookConsultation: true,
-                        }
-                    })
+                    console.log('email notifications success');
                 }
                 else {
                     console.log('email notifications failed');
                 }
+                setState({
+                    ...state,
+                    uiState: {
+                        ...state.uiState,
+                        showTopics: false,
+                        bookingReady: false,
+                        bookingLoading: true,
+                        bookConsultation: true,
+                    }
+                })
                 break;
             case 'return':
                 setState({
