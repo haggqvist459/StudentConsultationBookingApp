@@ -17,7 +17,7 @@ const SignIn = function ({ history }) {
             event.preventDefault();
             try {
                 provider.setCustomParameters({
-                    // hd: firebaseConstants.HD
+                    hd: firebaseConstants.HD
                 });
                 firebase.auth().signInWithPopup(provider)
                     .then((user) => {
