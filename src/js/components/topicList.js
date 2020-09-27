@@ -3,7 +3,8 @@ import { Grid, Typography, CircularProgress, TextField } from '@material-ui/core
 import { TOOL_BUTTON, DESIGN, adminServices } from '../utils';
 import { IconButton, Button, styled, GridList, makeStyles } from '@material-ui/core';
 import { Edit, ArrowBack, ArrowForward, Delete } from '@material-ui/icons';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+import "../../sass/components/topicList.scss";
 
 const BlueButton = styled(Button)({
     background: DESIGN.PRIMARY_COLOR,
@@ -46,6 +47,8 @@ const useStyles = makeStyles((theme) => ({
     gridList: {
         width: '80vw',
         height: '20vh',
+        borderWidth: '1px',
+        borderColor: '#00AEB3 !important'
     },
     icon: {
         color: 'rgba(255, 255, 255, 0.54)',
@@ -479,6 +482,22 @@ function StudentTopics({ topics, onSelect }) {
             </Grid>
 
             {topics ?
+                <TextField
+                    id="standard-textarea"
+                    label="Consultation question"
+                    placeholder="Question here"
+                    value={textFieldValue}
+                    onChange={handleChange}
+                    multiline
+                    rows={2}
+                    rowsMax={4}
+                    style={{ width: '100%', marginBottom: "20px", marginTop: "20px" }}
+                />
+                :
+                null
+            }
+            <br/>
+            {topics ?
                 <Grid className={classes.root}>
                     {topics && topics.length > 0 ?
                         <List data={topics} />
@@ -490,21 +509,6 @@ function StudentTopics({ topics, onSelect }) {
                 </Grid>
                 :
                 <CircularProgress />
-            }
-
-            {topics ?
-                <TextField
-                    id="standard-textarea"
-                    label="Consultation question"
-                    placeholder="Question here"
-                    value={textFieldValue}
-                    onChange={handleChange}
-                    multiline
-                    rows={3}
-                    style={{width: '100%'}}
-                />
-                :
-                null
             }
 
         </Grid>
