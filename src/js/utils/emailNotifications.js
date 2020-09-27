@@ -71,7 +71,7 @@ async function studentRequestNotification() {
     let currentTopic = JSON.parse(localStorage.getItem('CURRENT TOPIC'));
     let teacherInfo = await findTeacherInfo({ courseID: currentSlot.courseID });
     let emailInfo = {};
-    let emailText = 'You have received a new consultation request from student ' + currentSlot.student + ' in subject ' + currentSlot.subject;
+    let emailText = 'You have received a new consultation request from student ' + currentSlot.student + ' in subject ' + currentSlot.course.longName;
 
     if (teacherInfo) {
         emailInfo = {
@@ -80,7 +80,7 @@ async function studentRequestNotification() {
             //teacherEmail: teacherInfo.email,
             teacherEmail: '5995@ait.nsw.edu.au',
             emailText: emailText,
-            studentQuestion: currentTopic.studentQuestion
+            studentQuestion: 'Student question: ' + currentTopic.studentQuestion
         }
     }
     else {
