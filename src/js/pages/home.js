@@ -112,7 +112,7 @@ const Home = function ({ history }) {
     }
 
     async function emailRequest() {
-        return await emailNotifications.studentRequestNotification({ courseID: state.uiState.currentSlot.course.courseID, studentName: state.uiState.currentSlot.student});
+        return await emailNotifications.studentRequestNotification();
     }
 
     function consultationButtonClick({ action }) {

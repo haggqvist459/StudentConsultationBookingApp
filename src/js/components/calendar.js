@@ -38,6 +38,7 @@ function Calendar({ content, studentClick, teacherClick, adminClick }) {
                     // if free, book, otherwise dont
                     let booking = {
                         course: date.event.extendedProps,
+                        courseID: date.event.extendedProps.courseID,
                         date: moment(date.event.start).format('YYYY-MM-DD'),
                         student: currentUser.displayName,
                         email: currentUser.email,
