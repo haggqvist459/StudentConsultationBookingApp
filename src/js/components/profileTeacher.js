@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Grid, Typography, Button, styled, Badge, CircularProgress } from '@material-ui/core';
-import { DESIGN, teacherServices, AuthContext } from '../utils';
+import { DESIGN, teacherServices, AuthContext, emailNotifications } from '../utils';
 import { TeacherSubject, ViewSubject } from './teacherSubject';
 
 const BlueButton = styled(Button)({
@@ -60,6 +60,14 @@ function Profile() {
     let finished = [];
     let approved = [];
     let requests = [];
+
+    async function cancelNotification() {
+        return await emailNotifications.teacherCancelNotification();
+    }
+
+    async function approveNotification() {
+        return await emailNotifications.teacherAcceptNotification();
+    }
 
     useEffect(() => {
 
@@ -132,15 +140,18 @@ function Profile() {
     }
 
     function consulButton({ action, consul }) {
+        localStorage.setItem('CURRENT SLOT', JSON.stringify(consul));
 
         switch (action) {
             case 'cancel':
+                cancelNotification();
                 consul.booked = false;
                 consul.confirmed = false;
                 consul.topic = 'none';
                 consul.student = 'none';
                 break;
             case 'approve':
+                approveNotification();
                 consul.confirmed = true;
                 consul.booked = false;
                 break;
