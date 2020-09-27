@@ -145,6 +145,7 @@ export async function updateSubject() {
                                             booked: false,
                                             confirmed: false,
                                             topic: 'none',
+                                            studentQuestion: 'none',
                                             student: 'none',
                                         }
                                         course.consultations.push(consultation);

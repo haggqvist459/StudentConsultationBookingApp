@@ -180,7 +180,6 @@ export async function bookConsultation() {
                                     }
                                 })
                             }
-
                         }
                     });
                 }
