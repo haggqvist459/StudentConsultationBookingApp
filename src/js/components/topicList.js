@@ -424,17 +424,26 @@ function StudentTopics({ topics, onSelect }) {
 
     const classes = useStyles();
     const [selected, setSelected] = useState(false);
+    const [textFieldValue, setTextFieldValue] = useState();
 
     function onClick({ topic }) {
         console.log('topic ', topic);
+        topic['studentQuestion'] = textFieldValue;
         localStorage.setItem('CURRENT TOPIC', JSON.stringify(topic))
         setSelected(true);
         onSelect();
     }
 
+    const handleChange = (e) => {
+        if (e.target.value !== null) {
+            setTextFieldValue(e.target.value);
+        }
+    }
+
     function List({ data }) {
 
         return (
+
             <GridList cellHeight={20} className={classes.gridList} cols={1}>
                 {data.map((topic, index) => (
                     <Grid container direction={'row'} justify={'space-between'} key={index} style={{ margin: '15px' }}>
@@ -455,7 +464,9 @@ function StudentTopics({ topics, onSelect }) {
                         </Grid>
                     </Grid>
                 ))}
+
             </GridList>
+
         )
     }
 
@@ -479,6 +490,21 @@ function StudentTopics({ topics, onSelect }) {
                 </Grid>
                 :
                 <CircularProgress />
+            }
+
+            {topics ?
+                <TextField
+                    id="standard-textarea"
+                    label="Consultation question"
+                    placeholder="Question here"
+                    value={textFieldValue}
+                    onChange={handleChange}
+                    multiline
+                    rows={3}
+                    style={{width: '100%'}}
+                />
+                :
+                null
             }
 
         </Grid>

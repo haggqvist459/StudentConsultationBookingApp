@@ -141,10 +141,12 @@ export async function updateSubject() {
                                         let date = moment(item.startRecur).day(subject.daysOfWeek).add((i * 7), 'days').format('YYYY-MM-DD');
                                         console.log('date ', date);
                                         let consultation = {
+                                            courseID: item.courseID,
                                             date: date,
                                             booked: false,
                                             confirmed: false,
                                             topic: 'none',
+                                            studentQuestion: 'none',
                                             student: 'none',
                                         }
                                         course.consultations.push(consultation);

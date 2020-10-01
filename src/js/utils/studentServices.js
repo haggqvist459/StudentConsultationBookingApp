@@ -103,6 +103,7 @@ export async function studentSubjects({ email }) {
                             date: consul.date,
                             student: consul.student,
                             topic: consul.topic,
+                            courseID: consul.courseID
                         }
                         consultations.push(studentConsultation);
                     }
@@ -172,6 +173,7 @@ export async function bookConsultation() {
                                         console.log('date found')
                                         consul.booked = true;
                                         consul.topic = topic;
+                                        consul.courseID = booking.courseID;
                                         consul.student = booking.student;
                                         consul.email = booking.email;
                                         consul.subject = booking.course.longName;
@@ -180,7 +182,6 @@ export async function bookConsultation() {
                                     }
                                 })
                             }
-
                         }
                     });
                 }

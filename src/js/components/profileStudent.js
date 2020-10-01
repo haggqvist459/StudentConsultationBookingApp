@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Grid, Typography, styled, Button, CircularProgress } from '@material-ui/core';
-import { AuthContext, DESIGN, teacherServices, studentServices } from '../utils';
+import { AuthContext, DESIGN, teacherServices, studentServices, emailNotifications } from '../utils';
 
 const RedButton = styled(Button)({
     background: DESIGN.BUTTON_RED,
@@ -35,20 +35,32 @@ const Profile = function ({ history }) {
         }
     })
 
+    async function cancelNotification() {
+        return await emailNotifications.studentCancelNotification();
+    }
+    
     function buttonClick({ action, consul }) {
+        localStorage.setItem('CURRENT SLOT', JSON.stringify(consul));
         switch (action) {
             case 'cancel':
                 // cancel and send email notification
+                let emailRes = cancelNotification();
+                if (emailRes) {
+                    console.log('email notification success')
+                }
+                else {
+                    console.log('email notifications failed')
+                }
                 console.log('cancel consultation')
                 consul.booked = false;
                 consul.confirmed = false;
                 consul.topic = 'none';
                 consul.student = 'none';
+                
                 break;
             default:
                 break;
         }
-
         localStorage.setItem('CURRENT SLOT', JSON.stringify(consul));
         updateConsultation();
     }
@@ -68,6 +80,7 @@ const Profile = function ({ history }) {
     useEffect(() => {
 
         async function getSubjects() {
+            localStorage.removeItem('CONSULTATIONS');
             await studentServices.studentSubjects({ email: currentUser.email }).then(function () {
                 console.log('updated student subjects');
             })
@@ -81,6 +94,12 @@ const Profile = function ({ history }) {
                         ...state.uiState,
                         mounted: false,
                         refreshing: false,
+                    },
+                    data: {
+                        consultations: {
+                            pending: null,
+                            approved: null,
+                        }
                     }
                 })
             })
@@ -92,9 +111,9 @@ const Profile = function ({ history }) {
                 let consultations = JSON.parse(localStorage.getItem('CONSULTATIONS'));
                 let pending = [];
                 let approved = [];
-    
+
                 if (consultations) {
-    
+
                     consultations.forEach((item) => {
                         if (item.booked) {
                             pending.push(item);
@@ -103,7 +122,7 @@ const Profile = function ({ history }) {
                             approved.push(item);
                         }
                     })
-    
+
                     setState({
                         ...state,
                         uiState: {

@@ -3,7 +3,8 @@ import { withRouter } from 'react-router';
 import { Grid, Typography, styled, Button } from '@material-ui/core';
 import { ArrowBack, Check } from '@material-ui/icons';
 import { RouterHeader, Calendar, StudentTopics } from '../components';
-import { studentServices, AuthContext, ROLE_CONSTANTS, teacherServices, DESIGN } from '../utils';
+import { studentServices, AuthContext, ROLE_CONSTANTS, teacherServices, DESIGN, emailNotifications } from '../utils';
+
 
 const ToolButton = styled(Button)({
     background: DESIGN.PRIMARY_COLOR,
@@ -110,9 +111,20 @@ const Home = function ({ history }) {
         })
     }
 
-    function buttonClick({ action }) {
+    async function emailRequest() {
+        return await emailNotifications.studentRequestNotification();
+    }
+
+    function consultationButtonClick({ action }) {
         switch (action) {
             case 'book':
+                let emailRes = emailRequest();
+                if (emailRes) {
+                    console.log('email notifications success');
+                }
+                else {
+                    console.log('email notifications failed');
+                }
                 setState({
                     ...state,
                     uiState: {
@@ -140,14 +152,15 @@ const Home = function ({ history }) {
     }
 
     useEffect(() => {
-        console.log('current user: ', currentUser );
+        console.log('current user: ', currentUser);
 
         async function bookConsultation() {
             setState({
                 ...state,
-                uiState: {  
+                uiState: {
                     ...state.uiState,
                     bookConsultation: false,
+                    mounted: false,
                 },
                 servicesResponse: {
                     ...state.servicesResponse,
@@ -176,7 +189,7 @@ const Home = function ({ history }) {
                     break;
                 case ROLE_CONSTANTS.TEACHER:
                     let subjects = await teacherServices.teacherSubjects({ email: currentUser.email });
-                    
+
                     // subjects.forEach((item, index) => {
                     //     courseList.push(item);
                     // })
@@ -224,7 +237,7 @@ const Home = function ({ history }) {
             bookConsultation();
         }
 
-    }, [state]) 
+    }, [state])
 
     return (
         <Grid>
@@ -256,7 +269,7 @@ const Home = function ({ history }) {
                         <Grid container direction={'row'} justify={'space-evenly'} item xs={12} sm={12} md={6} lg={6} xl={6}>
                             <ToolButton
                                 startIcon={<ArrowBack />}
-                                onClick={() => buttonClick({ action: 'return' })}>
+                                onClick={() => consultationButtonClick({ action: 'return' })}>
                                 Return
                             </ToolButton>
 
@@ -264,10 +277,10 @@ const Home = function ({ history }) {
                                 <Typography>{state.uiState.currentTopic.topic}</Typography>
                                 <Typography>{state.uiState.currentSlot.course.longName}</Typography>
                             </Grid>
-        
+
                             <ToolButton
                                 endIcon={<Check />}
-                                onClick={() => buttonClick({ action: 'book' })}>
+                                onClick={() => consultationButtonClick({ action: 'book' })}>
                                 Book
                             </ToolButton>
                         </Grid>
@@ -276,13 +289,13 @@ const Home = function ({ history }) {
                     }
                 </Grid>
 
-                <Grid container justify={'center'} style={{ minHeight: '150px'}}>
+                <Grid container justify={'center'} style={{ minHeight: '150px' }}>
                     {state.serviceResponse.bookingResponse && state.serviceResponse.bookingResponse ?
-                    <Grid>
-                        <Typography>{state.serviceResponse.bookingResponse}</Typography>
-                    </Grid>
-                    :
-                    null
+                        <Grid>
+                            <Typography>{state.serviceResponse.bookingResponse}</Typography>
+                        </Grid>
+                        :
+                        null
                     }
                 </Grid>
 
