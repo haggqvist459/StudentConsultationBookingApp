@@ -25,8 +25,8 @@ function Calendar({ content, studentClick, teacherClick, adminClick }) {
         let booked = false;
         let startDate = moment(date.event.start).format('YYYY-MM-DD');
         const tomorrow = moment().add(1, 'day').startOf('day').format('YYYY-MM-DD');
-        if (currentUserRole == ROLE_CONSTANTS.STUDENT) {
-            if (startDate != tomorrow && !moment().isAfter(startDate)) {
+        if (currentUserRole === ROLE_CONSTANTS.STUDENT) {
+            if (startDate !== tomorrow && !moment().isAfter(startDate)) {
 
                 date.event.extendedProps.consultations.forEach((consul, index) => {
                     var n = consul.date.localeCompare(startDate);
@@ -81,7 +81,7 @@ function Calendar({ content, studentClick, teacherClick, adminClick }) {
             var n = consul.date.localeCompare(eventStarting);
             const tomorrow = moment().add(1, 'day').startOf('day').format('YYYY-MM-DD');
     
-            if (moment().isAfter(eventStarting) || eventStarting == tomorrow && currentUserRole == ROLE_CONSTANTS.STUDENT) {
+            if (moment().isAfter(eventStarting) || eventStarting === tomorrow && currentUserRole === ROLE_CONSTANTS.STUDENT) {
                 eventInfo.backgroundColor = 'gray';
                 eventInfo.borderColor = DESIGN.HOVER_BLUE;
             }
@@ -120,16 +120,16 @@ function Calendar({ content, studentClick, teacherClick, adminClick }) {
     useEffect(() => {
         let checkWeekend = moment().isoWeekday();
         console.log(' DAY NUMBER ', moment().isoWeekday())
-        if (checkWeekend == 6 || checkWeekend == 7) {
+        if (checkWeekend === 6 || checkWeekend === 7) {
             console.log('its weekend, ' )
-            setWeekend(false)
+            setWeekend(true)
         }
     }, [weekend])
 
     return (
         <Grid container direction={"column"} justify="center" alignItems="center">
 
-            {weekend == true ? 
+            {weekend === true ? 
             <Typography>The calendar is closed on weekends.</Typography>
             :
             <Grid container item direction={'column'} xs={10} >
