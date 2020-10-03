@@ -1,6 +1,6 @@
 import React, { useCallback, useContext } from 'react';
 import { withRouter } from 'react-router';
-import { ROUTING_CONSTANTS, firebase, AuthContext } from '../utils';
+import { ROUTING_CONSTANTS, firebase, AuthContext, FIREBASE_CONSTANTS } from '../utils';
 import { Redirect } from 'react-router';
 import { Grid, Typography, Button } from '@material-ui/core';
 import { RouterHeader } from '../components';
@@ -17,7 +17,7 @@ const SignIn = function ({ history }) {
             event.preventDefault();
             try {
                 provider.setCustomParameters({
-                    // hd: firebaseConstants.HD
+                    hd: FIREBASE_CONSTANTS.HD
                 });
                 firebase.auth().signInWithPopup(provider)
                     .then((user) => {
